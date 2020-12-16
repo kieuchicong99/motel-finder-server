@@ -1,63 +1,101 @@
 basePath: /v2
 definitions:
-  httputil.ErrBadRequest:
+  model.CreateMotelPayload:
     properties:
-      code:
-        example: 400
-        type: integer
-      message:
-        example: Bad Request
+      Address:
+        example: Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội
+        type: string
+      Cost:
+        example: 3.3
+        type: number
+      Description:
+        example: Nhà rộng rãi, thoáng mát
+        type: string
+      Image:
+        example: https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
+        type: string
+      Images:
+        example:
+        - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
+        items:
+          type: string
+        type: array
+      Latitude:
+        example: "21.0286755"
+        type: string
+      Longitude:
+        example: 105.7558943,13z
+        type: string
+      Tags:
+        example:
+        - hanoi
+        items:
+          type: string
+        type: array
+      Title:
+        example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
         type: string
     type: object
-  httputil.ErrInternalServer:
+  model.GetManyResponse:
     properties:
-      code:
-        example: 500
-        type: integer
-      message:
-        example: InternalServer
+      Data:
+        items:
+          type: object
+        type: array
+      Error:
+        type: string
+      Message:
         type: string
     type: object
-  httputil.ErrNotFound:
+  model.GetOneResponse:
     properties:
-      code:
-        example: 404
-        type: integer
-      message:
-        example: Not Found
+      Data:
+        type: object
+      Error:
+        type: string
+      Message:
         type: string
     type: object
-  httputil.HTTPError:
+  model.UpdateMotelPayload:
     properties:
-      code:
-        type: integer
-      message:
+      Address:
+        example: Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội
         type: string
-    type: object
-  model.AddAccount:
-    properties:
-      name:
-        example: account name
+      Cost:
+        example: 3.3
+        type: number
+      Description:
+        example: Nhà rộng rãi, thoáng mát
         type: string
-    type: object
-  model.UpdateAccount:
-    properties:
-      name:
-        example: account name
+      FinishedAt:
+        example: "2021-01-15T22:20:28.227+00:00"
         type: string
-    type: object
-  model.User:
-    properties:
-      createdOn:
+      Image:
+        example: https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
         type: string
-      email:
-        example: example@gmail.com
+      Images:
+        example:
+        - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
+        items:
+          type: string
+        type: array
+      Latitude:
+        example: "21.0286755"
         type: string
-      pasword:
-        example: password
+      Longitude:
+        example: 105.7558943,13z
         type: string
-      username:
-        example: kieuchicong
+      Status:
+        example: true
+        type: boolean
+      Tags:
+        example:
+        - hanoi
+        items:
+          type: string
+        type: array
+      Title:
+        example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
         type: string
     type: object
 host: petstore.swagger.io
@@ -74,16 +112,46 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /accounts:
+  /motel:
     get:
-      consumes:
+      description: GetMotelsByFilter
+      produces:
       - application/json
-      description: get accounts
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetManyResponse'
+      summary: Lấy danh sách bài đăng
+      tags:
+      - Motel
+    post:
+      description: CreateMotel
       parameters:
-      - description: name search by q
-        format: email
-        in: query
-        name: q
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateMotelPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      summary: Tạo bài đăng
+      tags:
+      - Motel
+  /motel/{code}:
+    get:
+      description: GetMotelByCode
+      parameters:
+      - description: Motel code
+        in: path
+        name: code
+        required: true
         type: string
       produces:
       - application/json
@@ -91,201 +159,32 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.User'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/httputil.ErrBadRequest'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/httputil.ErrNotFound'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/httputil.ErrInternalServer'
-      summary: List accounts
+            $ref: '#/definitions/model.GetOneResponse'
+      summary: Lấy bài đăng theo code
       tags:
-      - User
-    post:
-      consumes:
-      - application/json
-      description: add by json account
-      parameters:
-      - description: Add account
-        in: body
-        name: account
-        required: true
-        schema:
-          $ref: '#/definitions/model.AddAccount'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.User'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/httputil.ErrBadRequest'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/httputil.ErrNotFound'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/httputil.ErrInternalServer'
-      summary: Add an account
-      tags:
-      - User
-  /accounts/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete by account ID
-      parameters:
-      - description: Account ID
-        format: int64
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/model.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/httputil.ErrBadRequest'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/httputil.ErrNotFound'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/httputil.ErrInternalServer'
-      summary: Delete an account
-      tags:
-      - User
-    get:
-      consumes:
-      - application/json
-      description: get string by ID
-      parameters:
-      - description: Account ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/httputil.HTTPError'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/httputil.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/httputil.HTTPError'
-      summary: Show an account
-      tags:
-      - User
+      - Motel
     patch:
-      consumes:
-      - application/json
-      description: Update by json account
+      description: CreateMotel
       parameters:
-      - description: Account ID
+      - description: Motel code
         in: path
-        name: id
+        name: code
         required: true
-        type: integer
-      - description: Update account
+        type: string
+      - description: request information
         in: body
-        name: account
+        name: request
         required: true
         schema:
-          $ref: '#/definitions/model.UpdateAccount'
+          $ref: '#/definitions/model.UpdateMotelPayload'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.User'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/httputil.ErrBadRequest'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/httputil.ErrNotFound'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/httputil.ErrInternalServer'
-      summary: Update an account
+            $ref: '#/definitions/model.GetOneResponse'
+      summary: Cập nhật bài đăng
       tags:
-      - User
-  /accounts/{id}/images:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Upload file
-      parameters:
-      - description: Account ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: account image
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/httputil.ErrBadRequest'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/httputil.ErrNotFound'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/httputil.ErrInternalServer'
-      summary: Upload account image
-      tags:
-      - User
+      - Motel
 swagger: "2.0"

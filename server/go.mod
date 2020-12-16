@@ -9,7 +9,6 @@ require (
 	github.com/go-openapi/spec v0.19.12 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible
-	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/lib/pq v1.8.0
@@ -17,7 +16,7 @@ require (
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.6.9
-	github.com/szuecs/gin-glog v1.1.1
+	go.mongodb.org/mongo-driver v1.4.4
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
 	golang.org/x/net v0.0.0-20201029221708-28c70e62bb1d // indirect
 	golang.org/x/sys v0.0.0-20201029080932-201ba4db2418 // indirect

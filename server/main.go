@@ -1,18 +1,13 @@
 package main
 
 import (
-	// "log"
-	// "os"
-	"os"
-	"server/docs"
-
-	"server/controller"
-
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
+	"server/controller"
+	"server/docs"
 )
 
 // @title Swagger Example API
@@ -31,12 +26,12 @@ import (
 // @BasePath /v2
 
 func main() {
-	port := os.Getenv("PORT") // deploy
+	//port := os.Getenv("PORT") // deploy
 	docs.SwaggerInfo.Title = "Swagger API"
 	docs.SwaggerInfo.Description = "This is a sample server."
 	docs.SwaggerInfo.Version = "1.0"
-	// docs.SwaggerInfo.Host = "localhost:" + "8080"
-	docs.SwaggerInfo.Host = "localhost:" + port // deploy
+	docs.SwaggerInfo.Host = "localhost:" + "8081"
+	//docs.SwaggerInfo.Host = "localhost:" + port // deploy
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
@@ -47,15 +42,21 @@ func main() {
 	v1 := r.Group("/api/v1")
 	{
 		//
-
-		accounts := v1.Group("/accounts")
+		//accounts := v1.Group("/accounts")
+		//{
+		//	accounts.GET(":id", c.ShowAccount)
+		//	accounts.GET("", c.ListAccounts)
+		//	accounts.POST("", c.AddAccount)
+		//	accounts.DELETE(":id", c.DeleteAccount)
+		//	accounts.PATCH(":id", c.UpdateAccount)
+		//	accounts.POST(":id/images", c.UploadAccountImage)
+		//}
+		motel := v1.Group("/motel")
 		{
-			accounts.GET(":id", c.ShowAccount)
-			accounts.GET("", c.ListAccounts)
-			accounts.POST("", c.AddAccount)
-			accounts.DELETE(":id", c.DeleteAccount)
-			accounts.PATCH(":id", c.UpdateAccount)
-			accounts.POST(":id/images", c.UploadAccountImage)
+			motel.GET("", c.GetMotelsByFilter)
+			motel.POST("", c.CreateMotel)
+			motel.PATCH(":code", c.UpdateMotel)
+			motel.GET(":code", c.GetMotelByCode)
 		}
 	}
 	url := ginSwagger.URL("/swagger/doc.json")
@@ -64,8 +65,8 @@ func main() {
 	// if port == "" {
 	// 	log.Fatal("$PORT must be set")
 	// }
-	// r.Run(":" + "8080")
-	r.Run(":" + port) // deploy
+	r.Run(":" + "8081")
+	//r.Run(":" + port) // deploy
 }
 
 func CORSMiddleware() gin.HandlerFunc {
