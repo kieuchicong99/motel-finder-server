@@ -48,7 +48,7 @@ func (m mongoGoDriverRepository) Update(code string, motel *model.Motel) (update
 	filter := bson.M{
 		"MotelCode": c,
 	}
-	utilities.InfoLog.Printf("Address: %v",  motel)
+	utilities.InfoLog.Printf("Address: %v", motel)
 	update := bson.D{
 		{"$set", motel},
 	}

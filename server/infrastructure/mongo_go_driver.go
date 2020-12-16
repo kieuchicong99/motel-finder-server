@@ -13,7 +13,7 @@ type MongoGoDriverConnector struct {
 	client *mongo.Client
 }
 
-func (c *MongoGoDriverConnector)Connect()(*mongo.Client, error)  {
+func (c *MongoGoDriverConnector) Connect() (*mongo.Client, error) {
 	// Set client options
 	clientOptions := options.Client().ApplyURI("mongodb+srv://admin:admin%40123@cluster0.ce2mm.mongodb.net/motelfinder?retryWrites=true&w=majority")
 	// Connect to MongoDB

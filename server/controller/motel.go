@@ -95,7 +95,6 @@ func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
 
 }
 
-
 //@Tags Motel
 // @Summary Lấy bài đăng theo code
 // @Description GetMotelByCode

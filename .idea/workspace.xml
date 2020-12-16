@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0710acd3-a333-4b50-87b3-d0ad8a69d938" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/server/controller/motel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/model/response.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/repository/motel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/service/motel.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/.idea/server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/server/.idea/server.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controller/account.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/controller/account.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controller/db_connector.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/infrastructure/sqldb_connector.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/docs/docs.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/docs/swagger.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/docs/swagger.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/server/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/server/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/httputil/httputil.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/utilities/httputil.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/infrastructure/mongo.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/infrastructure/mongo_go_driver.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/favourite.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/model/favourite.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/motel.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/model/motel.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/utilities/logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/utilities/logger.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectId" id="1lfKKYL8v9kzamBqFGQvs4G1RLv" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="sortByType" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/server" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0710acd3-a333-4b50-87b3-d0ad8a69d938" name="Default Changelist" comment="" />
+      <created>1607982641998</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1607982641998</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="466" y="155" width="424" height="491" key="FileChooserDialogImpl" timestamp="1608060545221">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="466" y="155" width="424" height="491" key="FileChooserDialogImpl/0.27.1366.741@0.27.1366.741" timestamp="1608060545221" />
+  </component>
+</project>

@@ -5,11 +5,11 @@ import (
 	"os"
 )
 
-var(
-	InfoLog, ErrLog  *log.Logger
+var (
+	InfoLog, ErrLog *log.Logger
 )
 
-func init()  {
+func init() {
 	InfoLog = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrLog = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 }

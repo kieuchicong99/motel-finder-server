@@ -1,13 +1,11 @@
-
 package model
 
 import (
-"errors"
-"fmt"
-"time"
+	"errors"
+	"fmt"
+	"time"
 
-
-uuid "github.com/gofrs/uuid"
+	uuid "github.com/gofrs/uuid"
 )
 
 var (
@@ -16,9 +14,9 @@ var (
 )
 
 type User struct {
-	UserName string `json:"username" example:"kieuchicong"`
-	PassWord string `json:"pasword" example:"password"`
-	Email    string `json:"email" example:"example@gmail.com" `
+	UserName  string    `json:"username" example:"kieuchicong"`
+	PassWord  string    `json:"pasword" example:"password"`
+	Email     string    `json:"email" example:"example@gmail.com" `
 	CreatedOn time.Time `json:"createdOn" example:"2020-11-01 00:00:00" format:"2020-11-01 00:00:00"`
 }
 

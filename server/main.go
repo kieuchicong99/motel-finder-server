@@ -1,13 +1,15 @@
 package main
 
 import (
+	"os"
+	"server/controller"
+	"server/docs"
+
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
-	"server/controller"
-	"server/docs"
 )
 
 // @title Swagger Example API
@@ -26,12 +28,12 @@ import (
 // @BasePath /v2
 
 func main() {
-	//port := os.Getenv("PORT") // deploy
+	port := os.Getenv("PORT") // deploy
 	docs.SwaggerInfo.Title = "Swagger API"
 	docs.SwaggerInfo.Description = "This is a sample server."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:" + "8081"
-	//docs.SwaggerInfo.Host = "localhost:" + port // deploy
+	// docs.SwaggerInfo.Host = "localhost:" + "8081"
+	docs.SwaggerInfo.Host = "localhost:" + port // deploy
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
@@ -65,8 +67,8 @@ func main() {
 	// if port == "" {
 	// 	log.Fatal("$PORT must be set")
 	// }
-	r.Run(":" + "8081")
-	//r.Run(":" + port) // deploy
+	// r.Run(":" + "8081")
+	r.Run(":" + port) // deploy
 }
 
 func CORSMiddleware() gin.HandlerFunc {

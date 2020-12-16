@@ -17,7 +17,6 @@ type HTTPError struct {
 	Message string `json:"Message" `
 }
 
-
 // HTTPError BadRequest
 type ErrBadRequest struct {
 	Code    int    `json:"Code" example:"400"`

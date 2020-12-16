@@ -16,7 +16,7 @@ definitions:
         type: string
       Images:
         example:
-        - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
+          - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
         items:
           type: string
         type: array
@@ -28,7 +28,7 @@ definitions:
         type: string
       Tags:
         example:
-        - hanoi
+          - hanoi
         items:
           type: string
         type: array
@@ -75,7 +75,7 @@ definitions:
         type: string
       Images:
         example:
-        - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
+          - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
         items:
           type: string
         type: array
@@ -90,7 +90,7 @@ definitions:
         type: boolean
       Tags:
         example:
-        - hanoi
+          - hanoi
         items:
           type: string
         type: array
@@ -116,7 +116,7 @@ paths:
     get:
       description: GetMotelsByFilter
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -124,18 +124,18 @@ paths:
             $ref: '#/definitions/model.GetManyResponse'
       summary: Lấy danh sách bài đăng
       tags:
-      - Motel
+        - Motel
     post:
       description: CreateMotel
       parameters:
-      - description: request information
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.CreateMotelPayload'
+        - description: request information
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/model.CreateMotelPayload'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -143,18 +143,18 @@ paths:
             $ref: '#/definitions/model.GetOneResponse'
       summary: Tạo bài đăng
       tags:
-      - Motel
+        - Motel
   /motel/{code}:
     get:
       description: GetMotelByCode
       parameters:
-      - description: Motel code
-        in: path
-        name: code
-        required: true
-        type: string
+        - description: Motel code
+          in: path
+          name: code
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -162,23 +162,23 @@ paths:
             $ref: '#/definitions/model.GetOneResponse'
       summary: Lấy bài đăng theo code
       tags:
-      - Motel
+        - Motel
     patch:
       description: CreateMotel
       parameters:
-      - description: Motel code
-        in: path
-        name: code
-        required: true
-        type: string
-      - description: request information
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.UpdateMotelPayload'
+        - description: Motel code
+          in: path
+          name: code
+          required: true
+          type: string
+        - description: request information
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/model.UpdateMotelPayload'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -186,5 +186,5 @@ paths:
             $ref: '#/definitions/model.GetOneResponse'
       summary: Cập nhật bài đăng
       tags:
-      - Motel
+        - Motel
 swagger: "2.0"
