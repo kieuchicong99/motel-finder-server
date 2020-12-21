@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
+	jwt "server/middleware"
 	"server/model"
 	MongoDriver "server/repository"
 	MotelService "server/service"
@@ -59,7 +60,6 @@ func (c *Controller) CreateMotel(ctx *gin.Context) {
 // @Router /motel/{code} [patch]
 func (c *Controller) UpdateMotel(ctx *gin.Context) {
 	var payload model.UpdateMotelPayload
-
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
 		utilities.NewError(ctx, http.StatusBadRequest, err)
 		return
@@ -87,9 +87,31 @@ func (c *Controller) UpdateMotel(ctx *gin.Context) {
 // @Summary Lấy danh sách bài đăng
 // @Description GetMotelsByFilter
 // @Produce  json
+// @Security ApiKeyAuth
 // @Success 200  {object} model.GetManyResponse
 // @Router /motel [get]
 func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
+	token := ctx.Request.Header.Get("Authorization")
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	utilities.InfoLog.Printf("Token: %s", token)
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo== nil ||userInfo.RoleCode != "ADMIN"{
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	utilities.InfoLog.Printf("UserInfor: %v", userInfo)
 	result, _, httpCode := s.GetAll(1, 20)
 	ctx.JSON(httpCode, result)
 

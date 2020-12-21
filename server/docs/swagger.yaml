@@ -16,7 +16,7 @@ definitions:
         type: string
       Images:
         example:
-          - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
+        - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
         items:
           type: string
         type: array
@@ -28,12 +28,27 @@ definitions:
         type: string
       Tags:
         example:
-          - hanoi
+        - hanoi
         items:
           type: string
         type: array
       Title:
         example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
+        type: string
+    type: object
+  model.CreateUserPayload:
+    properties:
+      FullName:
+        example: Kiều Chí Công
+        type: string
+      PassWord:
+        example: abc123
+        type: string
+      RoleCode:
+        example: ADMIN
+        type: string
+      UserName:
+        example: kieuchicong
         type: string
     type: object
   model.GetManyResponse:
@@ -56,6 +71,15 @@ definitions:
       Message:
         type: string
     type: object
+  model.LoginPayload:
+    properties:
+      PassWord:
+        example: abc123
+        type: string
+      UserName:
+        example: kieuchicong
+        type: string
+    type: object
   model.UpdateMotelPayload:
     properties:
       Address:
@@ -75,7 +99,7 @@ definitions:
         type: string
       Images:
         example:
-          - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
+        - https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
         items:
           type: string
         type: array
@@ -90,7 +114,7 @@ definitions:
         type: boolean
       Tags:
         example:
-          - hanoi
+        - hanoi
         items:
           type: string
         type: array
@@ -116,26 +140,28 @@ paths:
     get:
       description: GetMotelsByFilter
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/model.GetManyResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Lấy danh sách bài đăng
       tags:
-        - Motel
+      - Motel
     post:
       description: CreateMotel
       parameters:
-        - description: request information
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: '#/definitions/model.CreateMotelPayload'
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateMotelPayload'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -143,18 +169,18 @@ paths:
             $ref: '#/definitions/model.GetOneResponse'
       summary: Tạo bài đăng
       tags:
-        - Motel
+      - Motel
   /motel/{code}:
     get:
       description: GetMotelByCode
       parameters:
-        - description: Motel code
-          in: path
-          name: code
-          required: true
-          type: string
+      - description: Motel code
+        in: path
+        name: code
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -162,23 +188,23 @@ paths:
             $ref: '#/definitions/model.GetOneResponse'
       summary: Lấy bài đăng theo code
       tags:
-        - Motel
+      - Motel
     patch:
       description: CreateMotel
       parameters:
-        - description: Motel code
-          in: path
-          name: code
-          required: true
-          type: string
-        - description: request information
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: '#/definitions/model.UpdateMotelPayload'
+      - description: Motel code
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateMotelPayload'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -186,5 +212,50 @@ paths:
             $ref: '#/definitions/model.GetOneResponse'
       summary: Cập nhật bài đăng
       tags:
-        - Motel
+      - Motel
+  /user:
+    post:
+      description: CreateUser
+      parameters:
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateUserPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      summary: Tạo tài khoản
+      tags:
+      - User
+  /user/login:
+    post:
+      description: LoginUser
+      parameters:
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      summary: Đăng nhập tài khoản
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

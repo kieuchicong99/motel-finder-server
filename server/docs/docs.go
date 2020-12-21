@@ -35,6 +35,11 @@ var doc = `{
     "paths": {
         "/motel": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "GetMotelsByFilter",
                 "produces": [
                     "application/json"
@@ -146,6 +151,68 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/user": {
+            "post": {
+                "description": "CreateUser",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Tạo tài khoản",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateUserPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "description": "LoginUser",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Đăng nhập tài khoản",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.LoginPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -200,6 +267,27 @@ var doc = `{
                 }
             }
         },
+        "model.CreateUserPayload": {
+            "type": "object",
+            "properties": {
+                "FullName": {
+                    "type": "string",
+                    "example": "Kiều Chí Công"
+                },
+                "PassWord": {
+                    "type": "string",
+                    "example": "abc123"
+                },
+                "RoleCode": {
+                    "type": "string",
+                    "example": "ADMIN"
+                },
+                "UserName": {
+                    "type": "string",
+                    "example": "kieuchicong"
+                }
+            }
+        },
         "model.GetManyResponse": {
             "type": "object",
             "properties": {
@@ -228,6 +316,19 @@ var doc = `{
                 },
                 "Message": {
                     "type": "string"
+                }
+            }
+        },
+        "model.LoginPayload": {
+            "type": "object",
+            "properties": {
+                "PassWord": {
+                    "type": "string",
+                    "example": "abc123"
+                },
+                "UserName": {
+                    "type": "string",
+                    "example": "kieuchicong"
                 }
             }
         },
@@ -289,6 +390,13 @@ var doc = `{
                     "example": "CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

@@ -115,7 +115,7 @@ func (m mongoGoDriverRepository) GetByCode(motelCode string) (getOne *model.GetO
 }
 
 func (m mongoGoDriverRepository) MakeIndexes() {
-	panic("implement me")
+
 }
 
 // mongoGoDriver

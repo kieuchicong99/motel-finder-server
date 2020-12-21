@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"server/controller"
 	"server/docs"
 
@@ -26,15 +25,19 @@ import (
 
 // @host petstore.swagger.io
 // @BasePath /v2
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 
 func main() {
-	port := os.Getenv("PORT") // deploy
+	//port := os.Getenv("PORT") // deploy
 	docs.SwaggerInfo.Title = "Swagger API"
 	docs.SwaggerInfo.Description = "This is a sample server."
 	docs.SwaggerInfo.Version = "1.0"
-	// docs.SwaggerInfo.Host = "localhost:" + "8081"
-	docs.SwaggerInfo.Host = "localhost:" + port // deploy
+	docs.SwaggerInfo.Host = "localhost:" + "8081"
+	//docs.SwaggerInfo.Host = "go-react-heroku.herokuapp.com" // deploy
 	docs.SwaggerInfo.BasePath = "/api/v1"
+	//docs.SwaggerInfo.Schemes = []string{"https", "https"} // deploy
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r := gin.Default()
@@ -53,12 +56,21 @@ func main() {
 		//	accounts.PATCH(":id", c.UpdateAccount)
 		//	accounts.POST(":id/images", c.UploadAccountImage)
 		//}
+
+		// motel api router
 		motel := v1.Group("/motel")
 		{
 			motel.GET("", c.GetMotelsByFilter)
 			motel.POST("", c.CreateMotel)
 			motel.PATCH(":code", c.UpdateMotel)
 			motel.GET(":code", c.GetMotelByCode)
+		}
+
+		// user api router
+		user := v1.Group("/user")
+		{
+			user.POST("", c.CreateUser)
+			user.POST("/login", c.LoginUser)
 		}
 	}
 	url := ginSwagger.URL("/swagger/doc.json")
@@ -67,8 +79,8 @@ func main() {
 	// if port == "" {
 	// 	log.Fatal("$PORT must be set")
 	// }
-	// r.Run(":" + "8081")
-	r.Run(":" + port) // deploy
+	r.Run(":" + "8081")
+	//r.Run(":" + port) // deploy
 }
 
 func CORSMiddleware() gin.HandlerFunc {
