@@ -63,4 +63,5 @@ type UserRepositoryInterface interface {
 	Login(username string, password string) (response *GetOneResponse, httpCode int)
 	ChangePass(newPass string, userCode string) (response *GetOneResponse, httpCode int)
 	AddMotelFavourites(motelCode string, userCode string) (response *GetOneResponse, httpCode int)
+	RemoveMotelFavourites(motelCode string, userCode string) (response *GetOneResponse, httpCode int)
 }

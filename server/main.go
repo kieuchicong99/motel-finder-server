@@ -75,6 +75,7 @@ func main() {
 			user.GET(":code", c.GetUserByCode)
 			user.PATCH("/change-pass", c.ChangePass)
 			user.POST("/add-favourite-motel", c.AddMotelFavourites)
+			user.POST("/remove-favourite-motel", c.RemoveMotelFavourites)
 		}
 	}
 	url := ginSwagger.URL("/swagger/doc.json")

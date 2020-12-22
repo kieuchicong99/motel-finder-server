@@ -378,6 +378,28 @@ paths:
       summary: Đăng nhập tài khoản
       tags:
       - User
+  /user/remove-favourite-motel:
+    post:
+      description: RemoveMotelFavourites
+      parameters:
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.AddFavouritePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Bỏ bài đăng yêu thích
+      tags:
+      - User
 securityDefinitions:
   ApiKeyAuth:
     in: header

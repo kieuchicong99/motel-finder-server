@@ -252,3 +252,42 @@ func (c *Controller) AddMotelFavourites(ctx *gin.Context) {
 	result, httpCode := userService.AddMotelFavourites(payload.MotelCode, userInfo.UserCode.Hex() )
 	ctx.JSON(httpCode, result)
 }
+
+//@Tags User
+// @Summary Bỏ bài đăng yêu thích
+// @Description RemoveMotelFavourites
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param request body model.AddFavouritePayload true "request information"
+// @Success 200 {object} model.GetOneResponse
+// @Router /user/remove-favourite-motel [post]
+func (c *Controller) RemoveMotelFavourites(ctx *gin.Context) {
+	var payload model.AddFavouritePayload
+	if err := ctx.ShouldBindJSON(&payload); err != nil {
+		utilities.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	//utilities.InfoLog.Printf("BODY: %v\n", payload)
+	token := ctx.Request.Header.Get("Authorization")
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	//utilities.InfoLog.Printf("Token: %s", token)
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo== nil ||userInfo.RoleCode != "ADMIN"{
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	result, httpCode := userService.RemoveMotelFavourites(payload.MotelCode, userInfo.UserCode.Hex() )
+	ctx.JSON(httpCode, result)
+}

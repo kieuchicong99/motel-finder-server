@@ -330,6 +330,42 @@
                 }
             }
         },
+        "/user/remove-favourite-motel": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "RemoveMotelFavourites",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Bỏ bài đăng yêu thích",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.AddFavouritePayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{code}": {
             "get": {
                 "description": "GetUserByCode",
