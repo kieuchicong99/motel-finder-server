@@ -152,6 +152,75 @@ var doc = `{
                 }
             }
         },
+        "/reviews": {
+            "post": {
+                "description": "CreateMotel",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Tạo bài đăng",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateReviewPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.InsertResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/reviews/{reviewID}": {
+            "patch": {
+                "description": "CreateMotel",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Tạo bài đăng",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Motel code",
+                        "name": "reviewID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateStatusReview"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.InsertResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "security": [
@@ -484,6 +553,26 @@ var doc = `{
                 }
             }
         },
+        "model.CreateReviewPayload": {
+            "type": "object",
+            "properties": {
+                "Comment": {
+                    "type": "string"
+                },
+                "MotelCode": {
+                    "type": "string"
+                },
+                "Rating": {
+                    "type": "integer"
+                },
+                "Status": {
+                    "type": "boolean"
+                },
+                "UserCode": {
+                    "type": "string"
+                }
+            }
+        },
         "model.CreateUserPayload": {
             "type": "object",
             "properties": {
@@ -523,6 +612,20 @@ var doc = `{
             }
         },
         "model.GetOneResponse": {
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "object"
+                },
+                "Error": {
+                    "type": "string"
+                },
+                "Message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.InsertResponse": {
             "type": "object",
             "properties": {
                 "Data": {
@@ -605,6 +708,14 @@ var doc = `{
                 "Title": {
                     "type": "string",
                     "example": "CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH"
+                }
+            }
+        },
+        "model.UpdateStatusReview": {
+            "type": "object",
+            "properties": {
+                "Status": {
+                    "type": "boolean"
                 }
             }
         },

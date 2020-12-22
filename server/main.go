@@ -41,6 +41,7 @@ func main() {
 
 	r := gin.Default()
 	c := controller.NewController()
+	reviewController := controller.NewReviewController()
 	//r.Use(static.Serve("/", static.LocalFile("./web", true))) // old version
 	r.Use(CORSMiddleware())
 	v1 := r.Group("/api/v1")
@@ -77,6 +78,14 @@ func main() {
 			user.POST("/add-favourite-motel", c.AddMotelFavourites)
 			user.POST("/remove-favourite-motel", c.RemoveMotelFavourites)
 		}
+
+		review := v1.Group("/reviews")
+		{
+			review.GET("", reviewController.GetListReview)
+			review.POST("", reviewController.CreateReview)
+			review.PATCH(":reviewID", reviewController.UpdateReviewStatus)
+		}
+
 	}
 	url := ginSwagger.URL("/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))

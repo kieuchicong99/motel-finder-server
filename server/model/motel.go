@@ -19,6 +19,7 @@ type Motel struct {
 	CreatedAt   time.Time          `json:"CreatedAt" bson:"CreatedAt,omitempty"`
 	FinishedAt  time.Time          `json:"FinishedAt" bson:"FinishedAt,omitempty"`
 	Status      bool               `json:"Status" bson:"Status"`
+
 }
 
 type MotelRepositoryInterface interface {

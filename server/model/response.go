@@ -21,5 +21,5 @@ type GetOneResponse struct {
 type GetManyResponse struct {
 	Message string        `json:"Message"`
 	Error   string        `json:"Error"`
-	Data    []interface{} `json:"Data"`
+	Data    interface{} `json:"Data"`
 }

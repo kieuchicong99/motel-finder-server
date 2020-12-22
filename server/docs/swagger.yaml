@@ -50,6 +50,19 @@ definitions:
         example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
         type: string
     type: object
+  model.CreateReviewPayload:
+    properties:
+      Comment:
+        type: string
+      MotelCode:
+        type: string
+      Rating:
+        type: integer
+      Status:
+        type: boolean
+      UserCode:
+        type: string
+    type: object
   model.CreateUserPayload:
     properties:
       FullName:
@@ -77,6 +90,15 @@ definitions:
         type: string
     type: object
   model.GetOneResponse:
+    properties:
+      Data:
+        type: object
+      Error:
+        type: string
+      Message:
+        type: string
+    type: object
+  model.InsertResponse:
     properties:
       Data:
         type: object
@@ -135,6 +157,11 @@ definitions:
       Title:
         example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
         type: string
+    type: object
+  model.UpdateStatusReview:
+    properties:
+      Status:
+        type: boolean
     type: object
   model.UpdateUserInfoPayload:
     properties:
@@ -239,6 +266,51 @@ paths:
       summary: Cập nhật bài đăng
       tags:
       - Motel
+  /reviews:
+    post:
+      description: CreateMotel
+      parameters:
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateReviewPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.InsertResponse'
+      summary: Tạo bài đăng
+      tags:
+      - Review
+  /reviews/{reviewID}:
+    patch:
+      description: CreateMotel
+      parameters:
+      - description: Motel code
+        in: path
+        name: reviewID
+        required: true
+        type: string
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateStatusReview'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.InsertResponse'
+      summary: Tạo bài đăng
+      tags:
+      - Review
   /user:
     get:
       description: GetUsersByFilter

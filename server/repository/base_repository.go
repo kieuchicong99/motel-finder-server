@@ -1,4 +1,4 @@
-package mongo
+package repository
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"product-view/infrastructure"
+	_ "server/infrastructure"
 )
 
 
@@ -17,12 +17,11 @@ type baseRepository struct {
 func (b *baseRepository) Create(object interface{}) error {
 	res, err := b.primaryCollection.InsertOne(context.TODO(), object)
 	if err != nil {
-		infrastructure.InfoLog.Println(err)
 		return err
 	}
-	var _id, ok = res.InsertedID.(primitive.ObjectID)
+	var _id, _ = res.InsertedID.(primitive.ObjectID)
 
-	infrastructure.InfoLog.Println(ok)
+
 
 	filler := bson.D{
 		{"_id", _id},
@@ -58,34 +57,34 @@ func (b *baseRepository) UpdateStatusOne(id string, query interface{}, status bo
 	}
 	update := bson.D{
 		{"$set", bson.D{
-			{"status", status},
+			{"Status", status},
 		}},
 	}
 	return b.primaryCollection.FindOneAndUpdate(context.TODO(), filter, update, opt).Decode(object)
 }
-func (b *baseRepository) findAll(query bson.D, page int, pageSize int, object interface{},opt*options.FindOptions) (total int64, err error) {
+func (b *baseRepository) FindAll(query bson.D, page int, pageSize int, object interface{},opt*options.FindOptions) (total int64, err error) {
 	findOptions := opt
 	var cur *mongo.Cursor
 
 	if page < 0 || pageSize < 0 && opt != nil {
 		if cur, err = b.primaryCollection.Find(context.TODO(), query); err != nil {
-			infrastructure.InfoLog.Print(err)
+
 			return
 		}
 
 		if err = cur.All(context.TODO(), object); err != nil {
-			infrastructure.InfoLog.Print(err)
+
 			return
 		}
 
 	} else {
 		if cur, err = b.primaryCollection.Find(context.TODO(), query, findOptions); err != nil {
-			infrastructure.InfoLog.Print(err)
+
 			return
 		}
 
 		if err = cur.All(context.TODO(), object); err != nil {
-			infrastructure.InfoLog.Print(err)
+
 			return
 		}
 
@@ -95,7 +94,7 @@ func (b *baseRepository) findAll(query bson.D, page int, pageSize int, object in
 	}
 
 	if total, err = b.primaryCollection.CountDocuments(context.TODO(), query); err != nil {
-		infrastructure.InfoLog.Print(err)
+
 		return
 	}
 	return
