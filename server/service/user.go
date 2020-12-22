@@ -8,6 +8,10 @@ type userService struct {
 	userRepository model.UserRepositoryInterface
 }
 
+func (u userService) AddMotelFavourites(motelCode string, userCode string) (response *model.GetOneResponse, httpCode int) {
+	return u.userRepository.AddMotelFavourites(motelCode, userCode)
+}
+
 func (u userService) ChangePass(newPass string, userCode string) (response *model.GetOneResponse, httpCode int) {
 	return u.userRepository.ChangePass(newPass, userCode)
 }

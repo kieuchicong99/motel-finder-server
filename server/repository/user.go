@@ -18,6 +18,34 @@ type UserMongoGoDriverRepository struct {
 	collection *mongo.Collection
 }
 
+func (u UserMongoGoDriverRepository) AddMotelFavourites(motelCode string, userCode string) (response *model.GetOneResponse, httpCode int) {
+	c, _ := primitive.ObjectIDFromHex(userCode)
+	filter := bson.M{
+		"UserCode": c,
+	}
+	var user model.User
+	u.collection.FindOne(context.TODO(), filter).Decode(&user)
+	// get array motelFavourites from user document
+	motelFavourites := user.MotelFavourites
+	if motelFavourites == nil{
+		motelFavourites = make(map[string]string)
+	}
+	motelFavourites[motelCode] = motelCode
+	utilities.InfoLog.Printf("After Append: %v", motelFavourites)
+	update := bson.D{
+		{"$set", bson.M{
+			"MotelFavourites": motelFavourites,
+		}}}
+
+	u.collection.FindOneAndUpdate(context.TODO(), filter, update, options.FindOneAndUpdate().SetReturnDocument(options.After)).Decode(&user)
+
+	return &model.GetOneResponse{
+		Message: "Success",
+		Error:   "",
+		Data:    user,
+	}, 200
+}
+
 func (u UserMongoGoDriverRepository) ChangePass(newPass string, userCode string) (response *model.GetOneResponse, httpCode int) {
 	opt := options.FindOneAndUpdate().SetReturnDocument(options.After)
 	c, _ := primitive.ObjectIDFromHex(userCode)

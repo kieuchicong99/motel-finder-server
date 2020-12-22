@@ -206,6 +206,42 @@ var doc = `{
                 }
             }
         },
+        "/user/add-favourite-motel": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "AddMotelFavourites",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Thêm bài đăng yêu thích",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.AddFavouritePayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/change-pass": {
             "patch": {
                 "security": [
@@ -228,7 +264,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.ChangePass"
+                            "$ref": "#/definitions/model.ChangePassPayload"
                         }
                     }
                 ],
@@ -264,7 +300,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UpdateUserInfo"
+                            "$ref": "#/definitions/model.UpdateUserInfoPayload"
                         }
                     }
                 ],
@@ -340,7 +376,15 @@ var doc = `{
         }
     },
     "definitions": {
-        "model.ChangePass": {
+        "model.AddFavouritePayload": {
+            "type": "object",
+            "properties": {
+                "MotelCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ChangePassPayload": {
             "type": "object",
             "properties": {
                 "NewPass": {
@@ -528,7 +572,7 @@ var doc = `{
                 }
             }
         },
-        "model.UpdateUserInfo": {
+        "model.UpdateUserInfoPayload": {
             "type": "object",
             "properties": {
                 "Email": {

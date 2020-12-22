@@ -4,7 +4,6 @@ import (
 	"server/controller"
 	"server/docs"
 
-	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
@@ -42,7 +41,7 @@ func main() {
 
 	r := gin.Default()
 	c := controller.NewController()
-	r.Use(static.Serve("/", static.LocalFile("./web", true)))
+	//r.Use(static.Serve("/", static.LocalFile("./web", true))) // old version
 	r.Use(CORSMiddleware())
 	v1 := r.Group("/api/v1")
 	{
@@ -75,14 +74,11 @@ func main() {
 			user.PATCH("/info", c.UpdateUser)
 			user.GET(":code", c.GetUserByCode)
 			user.PATCH("/change-pass", c.ChangePass)
+			user.POST("/add-favourite-motel", c.AddMotelFavourites)
 		}
 	}
 	url := ginSwagger.URL("/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
-
-	// if port == "" {
-	// 	log.Fatal("$PORT must be set")
-	// }
 	r.Run(":" + "8081")
 	//r.Run(":" + port) // deploy
 }

@@ -123,11 +123,11 @@ func (c *Controller) GetUserByCode(ctx *gin.Context) {
 // @Description UpdateUser
 // @Produce  json
 // @Security ApiKeyAuth
-// @Param request body model.UpdateUserInfo true "request information"
+// @Param request body model.UpdateUserInfoPayload true "request information"
 // @Success 200 {object} model.GetOneResponse
 // @Router /user/info [patch]
 func (c *Controller) UpdateUser(ctx *gin.Context) {
-	var payload model.UpdateUserInfo
+	var payload model.UpdateUserInfoPayload
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
 		utilities.NewError(ctx, http.StatusBadRequest, err)
 		return
@@ -170,11 +170,11 @@ func (c *Controller) UpdateUser(ctx *gin.Context) {
 // @Description ChangePass
 // @Produce  json
 // @Security ApiKeyAuth
-// @Param request body model.ChangePass true "request information"
+// @Param request body model.ChangePassPayload true "request information"
 // @Success 200 {object} model.GetOneResponse
 // @Router /user/change-pass [patch]
 func (c *Controller) ChangePass(ctx *gin.Context) {
-	var payload model.ChangePass
+	var payload model.ChangePassPayload
 	if err := ctx.ShouldBindJSON(&payload); err != nil {
 		utilities.NewError(ctx, http.StatusBadRequest, err)
 		return
@@ -214,3 +214,41 @@ func (c *Controller) ChangePass(ctx *gin.Context) {
 }
 
 
+//@Tags User
+// @Summary Thêm bài đăng yêu thích
+// @Description AddMotelFavourites
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param request body model.AddFavouritePayload true "request information"
+// @Success 200 {object} model.GetOneResponse
+// @Router /user/add-favourite-motel [post]
+func (c *Controller) AddMotelFavourites(ctx *gin.Context) {
+	var payload model.AddFavouritePayload
+	if err := ctx.ShouldBindJSON(&payload); err != nil {
+		utilities.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	//utilities.InfoLog.Printf("BODY: %v\n", payload)
+	token := ctx.Request.Header.Get("Authorization")
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	//utilities.InfoLog.Printf("Token: %s", token)
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo== nil ||userInfo.RoleCode != "ADMIN"{
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	result, httpCode := userService.AddMotelFavourites(payload.MotelCode, userInfo.UserCode.Hex() )
+	ctx.JSON(httpCode, result)
+}
