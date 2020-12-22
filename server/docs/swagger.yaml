@@ -1,5 +1,14 @@
 basePath: /v2
 definitions:
+  model.ChangePass:
+    properties:
+      NewPass:
+        example: abc@124
+        type: string
+      OldPass:
+        example: abc@123
+        type: string
+    type: object
   model.CreateMotelPayload:
     properties:
       Address:
@@ -122,6 +131,18 @@ definitions:
         example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
         type: string
     type: object
+  model.UpdateUserInfo:
+    properties:
+      Email:
+        example: example@gmail.com
+        type: string
+      FullName:
+        example: Kiều Chí Công
+        type: string
+      Phone:
+        example: "0795048768"
+        type: string
+    type: object
 host: petstore.swagger.io
 info:
   contact:
@@ -214,6 +235,20 @@ paths:
       tags:
       - Motel
   /user:
+    get:
+      description: GetUsersByFilter
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetManyResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Lấy danh sách Tài khoản
+      tags:
+      - User
     post:
       description: CreateUser
       parameters:
@@ -231,6 +266,69 @@ paths:
           schema:
             $ref: '#/definitions/model.GetOneResponse'
       summary: Tạo tài khoản
+      tags:
+      - User
+  /user/{code}:
+    get:
+      description: GetUserByCode
+      parameters:
+      - description: User code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      summary: Lấy Thông tin User theo code
+      tags:
+      - User
+  /user/change-pass:
+    patch:
+      description: ChangePass
+      parameters:
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChangePass'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Đổi mật khẩu tài khoản
+      tags:
+      - User
+  /user/info:
+    patch:
+      description: UpdateUser
+      parameters:
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Cập nhật Thông tin tài khoản
       tags:
       - User
   /user/login:

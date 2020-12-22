@@ -153,6 +153,29 @@ var doc = `{
             }
         },
         "/user": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "GetUsersByFilter",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Lấy danh sách Tài khoản",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetManyResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "CreateUser",
                 "produces": [
@@ -170,6 +193,78 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.CreateUserPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/change-pass": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "ChangePass",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Đổi mật khẩu tài khoản",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ChangePass"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/info": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "UpdateUser",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Cập nhật Thông tin tài khoản",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateUserInfo"
                         }
                     }
                 ],
@@ -213,9 +308,51 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/user/{code}": {
+            "get": {
+                "description": "GetUserByCode",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Lấy Thông tin User theo code",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "model.ChangePass": {
+            "type": "object",
+            "properties": {
+                "NewPass": {
+                    "type": "string",
+                    "example": "abc@124"
+                },
+                "OldPass": {
+                    "type": "string",
+                    "example": "abc@123"
+                }
+            }
+        },
         "model.CreateMotelPayload": {
             "type": "object",
             "properties": {
@@ -388,6 +525,23 @@ var doc = `{
                 "Title": {
                     "type": "string",
                     "example": "CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH"
+                }
+            }
+        },
+        "model.UpdateUserInfo": {
+            "type": "object",
+            "properties": {
+                "Email": {
+                    "type": "string",
+                    "example": "example@gmail.com"
+                },
+                "FullName": {
+                    "type": "string",
+                    "example": "Kiều Chí Công"
+                },
+                "Phone": {
+                    "type": "string",
+                    "example": "0795048768"
                 }
             }
         }

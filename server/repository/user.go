@@ -5,17 +5,38 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"server/infrastructure"
+	jwt "server/middleware"
 	"server/model"
 	"server/utilities"
-	jwt "server/middleware"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // mongoGoDriver
 type UserMongoGoDriverRepository struct {
 	collection *mongo.Collection
+}
+
+func (u UserMongoGoDriverRepository) ChangePass(newPass string, userCode string) (response *model.GetOneResponse, httpCode int) {
+	opt := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	c, _ := primitive.ObjectIDFromHex(userCode)
+	filter := bson.M{
+		"UserCode": c,
+	}
+	update := bson.D{
+		{"$set", bson.M{
+			"PassWord": newPass,
+		}},
+	}
+	var userUpdated model.User
+	u.collection.FindOneAndUpdate(context.TODO(), filter, update, opt).Decode(&userUpdated)
+	utilities.InfoLog.Printf("userUpdated: %v", userUpdated)
+	return &model.GetOneResponse{
+		Message: "Success",
+		Error:   "",
+		Data:    userUpdated,
+	}, 200
 }
 
 func (u UserMongoGoDriverRepository) MakeIndexes() {
@@ -57,15 +78,20 @@ func (u UserMongoGoDriverRepository) Insert(user *model.User) (insertResponse *m
 func (u UserMongoGoDriverRepository) Update(code string, user *model.User) (updateResponse *model.UpdateResponse, httpCode int) {
 	opt := options.FindOneAndUpdate().SetReturnDocument(options.After)
 	c, _ := primitive.ObjectIDFromHex(code)
+	utilities.InfoLog.Printf("userParameter: %v", user)
 	filter := bson.M{
 		"UserCode": c,
 	}
 	update := bson.D{
-		{"$set", user},
+		{"$set", bson.M{
+			"FullName": user.FullName,
+			"Email":    user.Email,
+			"Phone":    user.Phone,
+		}},
 	}
 	var userUpdated model.User
 	u.collection.FindOneAndUpdate(context.TODO(), filter, update, opt).Decode(&userUpdated)
-	utilities.InfoLog.Printf("motelUpdated: %v", userUpdated)
+	utilities.InfoLog.Printf("userUpdated: %v", userUpdated)
 	return &model.UpdateResponse{
 		Message: "Success",
 		Error:   "",
@@ -111,7 +137,7 @@ func (u UserMongoGoDriverRepository) GetByCode(code string) (getOne *model.GetOn
 	c, _ := primitive.ObjectIDFromHex(code)
 	utilities.InfoLog.Printf("UserCode:%v\n", code)
 	filter := bson.M{
-		"MotelCode": c,
+		"UserCode": c,
 	}
 	var user model.User
 	u.collection.FindOne(context.TODO(), filter).Decode(&user)
@@ -130,7 +156,7 @@ func (u UserMongoGoDriverRepository) Login(username string, password string) (up
 	var user model.User
 	u.collection.FindOne(context.TODO(), filter).Decode(&user)
 	utilities.InfoLog.Printf("user: %v", user)
-	token, err:=jwt.CreateToken(&user)
+	token, err := jwt.CreateToken(&user)
 	if err != nil {
 		return &model.GetOneResponse{
 			Message: "Error",

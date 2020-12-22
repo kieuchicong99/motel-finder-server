@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"os"
 	"server/model"
@@ -10,7 +11,6 @@ import (
 	"strings"
 	"time"
 )
-
 
 func CreateToken(user *model.User) (string, error) {
 	var err error
@@ -36,9 +36,9 @@ func ExtractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
 	//normally Authorization the_token_xxx
 	strArr := strings.Split(bearToken, " ")
-	utilities.InfoLog.Printf("Token split: %v", strArr )
+	utilities.InfoLog.Printf("Token split: %v", strArr)
 	if len(strArr) == 2 {
-		utilities.InfoLog.Printf("len: %v\n", len(strArr) )
+		utilities.InfoLog.Printf("len: %v\n", len(strArr))
 		return strArr[1]
 	}
 	return ""
@@ -46,36 +46,25 @@ func ExtractToken(r *http.Request) string {
 
 func VerifyToken(r *http.Request) (*jwt.Token, error) {
 	tokenString := ExtractToken(r)
-	utilities.InfoLog.Printf("VerifyToken => tokenString: %s\n",tokenString)
+	utilities.InfoLog.Printf("VerifyToken => tokenString: %s\n", tokenString)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		utilities.InfoLog.Printf("ACCESS_SECRET => tokenString: %s\n",os.Getenv("ACCESS_SECRET"))
+		utilities.InfoLog.Printf("ACCESS_SECRET => tokenString: %s\n", os.Getenv("ACCESS_SECRET"))
 		return []byte("btlweb2020"), nil
 	})
 	if err != nil {
 		return nil, err
 	}
-	utilities.InfoLog.Printf("VerifyToken => tokenString: %s\n",tokenString)
+	utilities.InfoLog.Printf("VerifyToken => tokenString: %s\n", tokenString)
 	return token, nil
-}
-
-func TokenValid(r *http.Request) error {
-	token, err := VerifyToken(r)
-	if err != nil {
-		return err
-	}
-	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		return err
-	}
-	return nil
 }
 
 func ExtractTokenMetadata(r *http.Request) (*model.UserInfo, error) {
 	token, err := VerifyToken(r)
-	utilities.InfoLog.Printf("ExtractTokenMetadata => token: %s\n",token)
+	utilities.InfoLog.Printf("ExtractTokenMetadata => token: %s\n", token)
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +72,17 @@ func ExtractTokenMetadata(r *http.Request) (*model.UserInfo, error) {
 	utilities.InfoLog.Printf("MapClaims: %v\n", claims)
 	if ok && token.Valid {
 		utilities.InfoLog.Printf("Token is valid\n")
+		utilities.InfoLog.Printf("UserCode: %s\n", claims["UserCode"].(string) )
+		code, err :=primitive.ObjectIDFromHex(claims["UserCode"].(string))
+		utilities.ErrLog.Printf("Error: %v\n", err)
+		utilities.InfoLog.Printf("Code: %s\n", code )
 		return &model.UserInfo{
-			UserName:  claims["UserName"].(string),
-			RoleCode:  claims["RoleCode"].(string),
-			FullName:  claims["FullName"].(string),
-			PassWord:  claims["PassWord"].(string),
-			Email:     claims["Email"].(string),
+			UserCode: code,
+			UserName: claims["UserName"].(string),
+			RoleCode: claims["RoleCode"].(string),
+			FullName: claims["FullName"].(string),
+			PassWord: claims["PassWord"].(string),
+			Email:    claims["Email"].(string),
 		}, nil
 	}
 	return nil, err

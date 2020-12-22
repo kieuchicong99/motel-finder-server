@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
+	jwt "server/middleware"
 	"server/model"
 	MongoDriver "server/repository"
 	UserService "server/service"
@@ -67,6 +68,149 @@ func (c *Controller) LoginUser(ctx *gin.Context) {
 
 	ctx.JSON(httpCode, result)
 
+}
+
+
+//@Tags User
+// @Summary Lấy danh sách Tài khoản
+// @Description GetUsersByFilter
+// @Produce  json
+// @Security ApiKeyAuth
+// @Success 200  {object} model.GetManyResponse
+// @Router /user [get]
+func (c *Controller) GetUsersByFilter(ctx *gin.Context) {
+	token := ctx.Request.Header.Get("Authorization")
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	utilities.InfoLog.Printf("Token: %s", token)
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo== nil ||userInfo.RoleCode != "ADMIN"{
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	utilities.InfoLog.Printf("UserInfor: %v", userInfo)
+	result, _, httpCode := userService.GetAll(1,20)
+	ctx.JSON(httpCode, result)
+
+}
+
+//@Tags User
+// @Summary Lấy Thông tin User theo code
+// @Description GetUserByCode
+// @Produce  json
+// @Param  code path string true "User code"
+// @Success 200  {object} model.GetOneResponse
+// @Router /user/{code} [get]
+func (c *Controller) GetUserByCode(ctx *gin.Context) {
+	code := ctx.Param("code")
+	result, httpCode := userService.GetByCode(code)
+	ctx.JSON(httpCode, result)
+}
+
+//@Tags User
+// @Summary Cập nhật Thông tin tài khoản
+// @Description UpdateUser
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param request body model.UpdateUserInfo true "request information"
+// @Success 200 {object} model.GetOneResponse
+// @Router /user/info [patch]
+func (c *Controller) UpdateUser(ctx *gin.Context) {
+	var payload model.UpdateUserInfo
+	if err := ctx.ShouldBindJSON(&payload); err != nil {
+		utilities.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	//utilities.InfoLog.Printf("BODY: %v\n", payload)
+
+	token := ctx.Request.Header.Get("Authorization")
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	//utilities.InfoLog.Printf("Token: %s", token)
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo== nil ||userInfo.RoleCode != "ADMIN"{
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	user := &model.User{
+		Phone: payload.Phone,
+		FullName: payload.FullName,
+		Email: payload.Email,
+	}
+	utilities.InfoLog.Printf("UserInfo: %s", userInfo)
+	result, httpCode := userService.Update( userInfo.UserCode.Hex(), user)
+	ctx.JSON(httpCode, result)
+}
+
+
+//@Tags User
+// @Summary Đổi mật khẩu tài khoản
+// @Description ChangePass
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param request body model.ChangePass true "request information"
+// @Success 200 {object} model.GetOneResponse
+// @Router /user/change-pass [patch]
+func (c *Controller) ChangePass(ctx *gin.Context) {
+	var payload model.ChangePass
+	if err := ctx.ShouldBindJSON(&payload); err != nil {
+		utilities.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	//utilities.InfoLog.Printf("BODY: %v\n", payload)
+
+	token := ctx.Request.Header.Get("Authorization")
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	//utilities.InfoLog.Printf("Token: %s", token)
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo== nil ||userInfo.RoleCode != "ADMIN"{
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	if userInfo.PassWord != payload.OldPass{
+		ctx.JSON(400, model.UpdateResponse{
+			Message: "Fail",
+			Error:   "Fail due to type PassWord incorrect ",
+			Data:    nil,
+		} )
+		return
+	}
+	result, httpCode := userService.ChangePass(payload.NewPass, userInfo.UserCode.Hex())
+	ctx.JSON(httpCode, result)
 }
 
 

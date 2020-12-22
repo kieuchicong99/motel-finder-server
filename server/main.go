@@ -37,7 +37,7 @@ func main() {
 	docs.SwaggerInfo.Host = "localhost:" + "8081"
 	//docs.SwaggerInfo.Host = "go-react-heroku.herokuapp.com" // deploy
 	docs.SwaggerInfo.BasePath = "/api/v1"
-	//docs.SwaggerInfo.Schemes = []string{"https", "https"} // deploy
+	//docs.SwaggerInfo.Schemes = []string{"https", "http"} // deploy
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r := gin.Default()
@@ -71,6 +71,10 @@ func main() {
 		{
 			user.POST("", c.CreateUser)
 			user.POST("/login", c.LoginUser)
+			user.GET("", c.GetUsersByFilter)
+			user.PATCH("/info", c.UpdateUser)
+			user.GET(":code", c.GetUserByCode)
+			user.PATCH("/change-pass", c.ChangePass)
 		}
 	}
 	url := ginSwagger.URL("/swagger/doc.json")
