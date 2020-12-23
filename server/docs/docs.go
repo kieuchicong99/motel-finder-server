@@ -152,6 +152,37 @@ var doc = `{
                 }
             }
         },
+        "/reports": {
+            "post": {
+                "description": "CreateMotel",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Tạo bài đăng",
+                "parameters": [
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateReportPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.InsertResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/reviews": {
             "post": {
                 "description": "CreateMotel",
@@ -553,6 +584,20 @@ var doc = `{
                 }
             }
         },
+        "model.CreateReportPayload": {
+            "type": "object",
+            "properties": {
+                "Description": {
+                    "type": "string"
+                },
+                "MotelCode": {
+                    "type": "string"
+                },
+                "UserCode": {
+                    "type": "string"
+                }
+            }
+        },
         "model.CreateReviewPayload": {
             "type": "object",
             "properties": {
@@ -598,10 +643,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "Data": {
-                    "type": "array",
-                    "items": {
-                        "type": "object"
-                    }
+                    "type": "object"
                 },
                 "Error": {
                     "type": "string"

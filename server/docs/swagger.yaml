@@ -50,6 +50,15 @@ definitions:
         example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
         type: string
     type: object
+  model.CreateReportPayload:
+    properties:
+      Description:
+        type: string
+      MotelCode:
+        type: string
+      UserCode:
+        type: string
+    type: object
   model.CreateReviewPayload:
     properties:
       Comment:
@@ -81,9 +90,7 @@ definitions:
   model.GetManyResponse:
     properties:
       Data:
-        items:
-          type: object
-        type: array
+        type: object
       Error:
         type: string
       Message:
@@ -266,6 +273,26 @@ paths:
       summary: Cập nhật bài đăng
       tags:
       - Motel
+  /reports:
+    post:
+      description: CreateMotel
+      parameters:
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateReportPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.InsertResponse'
+      summary: Tạo bài đăng
+      tags:
+      - Report
   /reviews:
     post:
       description: CreateMotel

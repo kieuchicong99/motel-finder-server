@@ -42,6 +42,7 @@ func main() {
 	r := gin.Default()
 	c := controller.NewController()
 	reviewController := controller.NewReviewController()
+	reportController := controller.NewReportController()
 	//r.Use(static.Serve("/", static.LocalFile("./web", true))) // old version
 	r.Use(CORSMiddleware())
 	v1 := r.Group("/api/v1")
@@ -84,6 +85,11 @@ func main() {
 			review.GET("", reviewController.GetListReview)
 			review.POST("", reviewController.CreateReview)
 			review.PATCH(":reviewID", reviewController.UpdateReviewStatus)
+		}
+		report := v1.Group("/reports")
+		{
+			report.POST("", reportController.CreateReport)
+			report.GET("", reportController.GetListReport)
 		}
 
 	}
