@@ -64,7 +64,8 @@ func (m mongoGoDriverRepository) Update(code string, motel *model.Motel) (update
 
 func (m mongoGoDriverRepository) GetAll(page, pageSize int, address string, fromCost, toCost uint, fromAcreage, toAcreage float64,
 	hasKitchen string, hasAirCondition, hasWaterHeater, hasBalcony *bool) (GetManyResponse *model.GetManyResponse, totalResult, httpCode int) {
-	query := bson.D{{"_id", bson.M{"$exists": true}}}
+	query := bson.D{{"_id", bson.M{"$exists": true}},
+		{"Status",true}}
 	opts := options.Find().SetSort(bson.M{"code": 1}).SetSkip(int64((page - 1) * pageSize)).SetLimit(int64(pageSize))
 	if address != "" {
 		query = append(query, bson.E{
