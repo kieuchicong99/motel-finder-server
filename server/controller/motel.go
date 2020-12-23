@@ -106,25 +106,25 @@ func (c *Controller) UpdateMotel(ctx *gin.Context) {
 // @Router /motel [get]
 func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("Authorization")
-	//if token == "" {
-	//	ctx.JSON(401, model.GetOneResponse{
-	//		Message: "Fail",
-	//		Error:   "Use invalid Token",
-	//		Data:    nil,
-	//	})
-	//	return
-	//}
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
 	utilities.InfoLog.Printf("Token: %s", token)
-	userInfo, _ := jwt.ExtractTokenMetadata(ctx.Request)
-	//if userInfo == nil || userInfo.RoleCode != "ADMIN" {
-	//	utilities.InfoLog.Printf("ERR: %v\n", err)
-	//	ctx.JSON(401, model.GetOneResponse{
-	//		Message: "Fail",
-	//		Error:   "Unauthorized or Use invalid Token",
-	//		Data:    nil,
-	//	})
-	//	return
-	//}
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo == nil || userInfo.RoleCode != "ADMIN" {
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
 	var queryParam model.MotelQuery
 	if err := utilities.DecodeQuery(ctx.Request.URL.Query(), &queryParam); err != nil {
 		ctx.JSON(400, model.GetOneResponse{
