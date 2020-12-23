@@ -79,6 +79,7 @@ func (c *Controller) CreateMotel(ctx *gin.Context) {
 		ElectricityPrice: payload.ElectricityPrice,
 		WaterPrice:       payload.WaterPrice,
 		UserCode:         userInfo.UserCode,
+		Acreage:          payload.Acreage,
 	}
 	result, httpCode := motelService.Insert(motel)
 
@@ -147,6 +148,7 @@ func (c *Controller) UpdateMotelInfo(ctx *gin.Context) {
 		HasBalcony:       payload.HasBalcony,
 		ElectricityPrice: payload.ElectricityPrice,
 		WaterPrice:       payload.WaterPrice,
+		Acreage:          payload.Acreage,
 	}
 	code := ctx.Param("code")
 	result, httpCode := motelService.UpdateInfo(code, motel)
@@ -270,8 +272,17 @@ func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
 		})
 		return
 	}
+	var queryParam model.MotelQuery
+	if err := utilities.DecodeQuery(ctx.Request.URL.Query(), &queryParam); err != nil {
+		ctx.JSON(400, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
 	utilities.InfoLog.Printf("UserInfor: %v", userInfo)
-	result, _, httpCode := motelService.GetAll(1, 20)
+	result, _, httpCode := motelService.GetAll(1, 20, queryParam.Address, queryParam.FromCost, queryParam.ToCost, queryParam.FromAcreage, queryParam.ToAcreage, queryParam.HasKitchen, queryParam.HasAirCondition, queryParam.HasWaterHeater, queryParam.HasBalcony)
 	ctx.JSON(httpCode, result)
 
 }

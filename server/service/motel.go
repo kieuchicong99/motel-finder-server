@@ -37,8 +37,8 @@ func (s motelService) UpdateInfo(code string, motel *model.Motel) (updateRespons
 	return updateResponse, httpCode
 }
 
-func (s motelService) GetAll(page, pageSize int) (GetManyResponse *model.GetManyResponse, totalResult int, httpCode int) {
-	GetManyResponse, totalResult, httpCode = s.motelRepository.GetAll(page, pageSize)
+func (s motelService) GetAll(page, pageSize int, address string, fromCost, toCost uint, fromAcreage, toAcreage float64, hasKitchen string, hasAirCondition, hasWaterHeater, hasBalcony *bool) (GetManyResponse *model.GetManyResponse, totalResult, httpCode int) {
+	GetManyResponse, totalResult, httpCode = s.motelRepository.GetAll(page, pageSize, address, fromCost, toCost, fromAcreage, toAcreage, hasKitchen, hasAirCondition, hasWaterHeater, hasBalcony)
 	return GetManyResponse, totalResult, httpCode
 }
 

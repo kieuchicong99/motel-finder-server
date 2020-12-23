@@ -760,6 +760,9 @@ var doc = `{
         "model.CreateMotelPayload": {
             "type": "object",
             "properties": {
+                "Acreage": {
+                    "type": "number"
+                },
                 "Address": {
                     "type": "string",
                     "example": "Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội"
@@ -948,6 +951,9 @@ var doc = `{
         "model.UpdateMotelPayload": {
             "type": "object",
             "properties": {
+                "Acreage": {
+                    "type": "number"
+                },
                 "Address": {
                     "type": "string",
                     "example": "Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội"

@@ -136,10 +136,58 @@ func (m mongoGoDriverRepository) UpdateAvailable(code string, motel *model.Motel
 	}, 200
 }
 
-func (m mongoGoDriverRepository) GetAll(page, pageSize int) (GetManyResponse *model.GetManyResponse, totalResult int, httpCode int) {
-	query := bson.M{"_id": bson.M{"$exists": true}}
+func (m mongoGoDriverRepository) GetAll(page, pageSize int, address string, fromCost, toCost uint, fromAcreage, toAcreage float64,
+	hasKitchen string, hasAirCondition, hasWaterHeater, hasBalcony *bool) (GetManyResponse *model.GetManyResponse, totalResult, httpCode int) {
+	query := bson.D{{"_id", bson.M{"$exists": true}},
+		{"Status",true}}
 	opts := options.Find().SetSort(bson.M{"code": 1}).SetSkip(int64((page - 1) * pageSize)).SetLimit(int64(pageSize))
-
+	if address != "" {
+		query = append(query, bson.E{
+			"Address", primitive.Regex{Pattern: address, Options: "i"},
+		})
+	}
+	if toCost > 0 {
+		query = append(query, bson.E{
+			Key: "Cost",
+			Value: bson.D{
+				{"$gte", fromCost},
+				{"$lt", toCost},
+			},
+		})
+	}
+	if toAcreage > 0 {
+		query = append(query, bson.E{
+			Key: "Acreage",
+			Value: bson.D{
+				{"$gte", fromAcreage},
+				{"$lt", toAcreage},
+			},
+		})
+	}
+	if hasKitchen != "" {
+		query = append(query, bson.E{
+			Key:   "Kitchen",
+			Value: hasKitchen,
+		})
+	}
+	if hasAirCondition != nil {
+		query = append(query, bson.E{
+			Key:   "HasAirCondition",
+			Value: hasAirCondition,
+		})
+	}
+	if hasWaterHeater != nil {
+		query = append(query, bson.E{
+			Key:   "Bathroom.HasAirCondition",
+			Value: hasAirCondition,
+		})
+	}
+	if hasBalcony != nil {
+		query = append(query, bson.E{
+			Key:   "HasBalcony",
+			Value: hasBalcony,
+		})
+	}
 	cursor, err := m.collection.Find(context.TODO(), query, opts)
 	defer cursor.Close(context.TODO())
 

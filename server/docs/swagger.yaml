@@ -23,6 +23,8 @@ definitions:
     type: object
   model.CreateMotelPayload:
     properties:
+      Acreage:
+        type: number
       Address:
         example: Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội
         type: string
@@ -150,6 +152,8 @@ definitions:
     type: object
   model.UpdateMotelPayload:
     properties:
+      Acreage:
+        type: number
       Address:
         example: Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội
         type: string
