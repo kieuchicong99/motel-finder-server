@@ -106,12 +106,45 @@ func (c *Controller) GetUsersByFilter(ctx *gin.Context) {
 }
 
 //@Tags User
+// @Summary Lấy Thông tin User theo Token
+// @Description GetUserByToken
+// @Produce  json
+// @Security ApiKeyAuth
+// @Success 200  {object} model.GetOneResponse
+// @Router /user/detail/by-token [get]
+func (c *Controller) GetUserByToken(ctx *gin.Context) {
+	token := ctx.Request.Header.Get("Authorization")
+	if token == "" {
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	//utilities.InfoLog.Printf("Token: %s", token)
+	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	if userInfo== nil{
+		utilities.InfoLog.Printf("ERR: %v\n", err)
+		ctx.JSON(401, model.GetOneResponse{
+			Message: "Fail",
+			Error:   "Unauthorized or Use invalid Token",
+			Data:    nil,
+		})
+		return
+	}
+	utilities.InfoLog.Printf("UserInfo: %s", userInfo)
+	result, httpCode := userService.GetByCode( userInfo.UserCode.Hex())
+	ctx.JSON(httpCode, result)
+}
+
+//@Tags User
 // @Summary Lấy Thông tin User theo code
 // @Description GetUserByCode
 // @Produce  json
 // @Param  code path string true "User code"
 // @Success 200  {object} model.GetOneResponse
-// @Router /user/{code} [get]
+// @Router /user/detail/by-code/{code} [get]
 func (c *Controller) GetUserByCode(ctx *gin.Context) {
 	code := ctx.Param("code")
 	result, httpCode := userService.GetByCode(code)

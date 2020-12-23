@@ -74,10 +74,12 @@ func main() {
 			user.POST("/login", c.LoginUser)
 			user.GET("", c.GetUsersByFilter)
 			user.PATCH("/info", c.UpdateUser)
-			user.GET(":code", c.GetUserByCode)
+			user.GET("/detail/by-code/:code", c.GetUserByCode)
 			user.PATCH("/change-pass", c.ChangePass)
 			user.POST("/add-favourite-motel", c.AddMotelFavourites)
 			user.POST("/remove-favourite-motel", c.RemoveMotelFavourites)
+			user.GET("/detail/by-token", c.GetUserByToken)
+
 		}
 
 		review := v1.Group("/reviews")

@@ -446,25 +446,6 @@ paths:
       summary: Tạo tài khoản
       tags:
       - User
-  /user/{code}:
-    get:
-      description: GetUserByCode
-      parameters:
-      - description: User code
-        in: path
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.GetOneResponse'
-      summary: Lấy Thông tin User theo code
-      tags:
-      - User
   /user/add-favourite-motel:
     post:
       description: AddMotelFavourites
@@ -507,6 +488,40 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Đổi mật khẩu tài khoản
+      tags:
+      - User
+  /user/detail/by-code/{code}:
+    get:
+      description: GetUserByCode
+      parameters:
+      - description: User code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      summary: Lấy Thông tin User theo code
+      tags:
+      - User
+  /user/detail/by-token:
+    get:
+      description: GetUserByToken
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Lấy Thông tin User theo Token
       tags:
       - User
   /user/info:

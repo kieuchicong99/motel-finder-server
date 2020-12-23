@@ -443,6 +443,60 @@ var doc = `{
                 }
             }
         },
+        "/user/detail/by-code/{code}": {
+            "get": {
+                "description": "GetUserByCode",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Lấy Thông tin User theo code",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/detail/by-token": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "GetUserByToken",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Lấy Thông tin User theo Token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
             "patch": {
                 "security": [
@@ -534,35 +588,6 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/model.AddFavouritePayload"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.GetOneResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/{code}": {
-            "get": {
-                "description": "GetUserByCode",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Lấy Thông tin User theo code",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User code",
-                        "name": "code",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
