@@ -42,7 +42,10 @@ func (c *Controller) CreateUser(ctx *gin.Context) {
 		PassWord:  payload.PassWord,
 		Email:     "",
 		Status:    false,
-		CreatedOn: time.Time{},
+		CreatedOn: time.Now(),
+		Address: "",
+		CMND: "",
+		Avatar: "http://file4.batdongsan.com.vn/images/default-user-avatar-blue.jpg",
 	}
 	result, httpCode := userService.Insert(newUser)
 
@@ -191,6 +194,9 @@ func (c *Controller) UpdateUser(ctx *gin.Context) {
 		Phone: payload.Phone,
 		FullName: payload.FullName,
 		Email: payload.Email,
+		Avatar: payload.Avatar,
+		Address: payload.Address,
+		CMND: payload.CMND,
 	}
 	utilities.InfoLog.Printf("UserInfo: %s", userInfo)
 	result, httpCode := userService.Update( userInfo.UserCode.Hex(), user)

@@ -17,6 +17,42 @@ type mongoGoDriverRepository struct {
 	collection *mongo.Collection
 }
 
+func (m mongoGoDriverRepository) GetAllByOwnerCode(code string) (GetManyResponse *model.GetManyResponse, totalResult int, httpCode int) {
+	utilities.InfoLog.Println("###########################")
+	userCode, _ := primitive.ObjectIDFromHex(code)
+	query := bson.M{"UserCode": userCode}
+	cursor, err := m.collection.Find(context.TODO(), query)
+	defer cursor.Close(context.TODO())
+
+	GetManyResponse = &model.GetManyResponse{
+		Message: "Repository => GetManyResponse Error",
+		Error:   "",
+		Data:    nil,
+	}
+	if err != nil {
+		utilities.ErrLog.Printf("Mongo Find error, err:%v\n", err)
+		GetManyResponse.Error = fmt.Sprintf("%s", err)
+		return GetManyResponse, 0, 500
+	}
+
+	data := []model.Motel{}
+	if err := cursor.All(context.TODO(), &data); err != nil {
+		utilities.ErrLog.Printf("Mongo cursor.All, err:%v\n", err)
+		GetManyResponse.Error = fmt.Sprintf("%s", err)
+		return GetManyResponse, 0, 500
+	}
+
+	GetManyResponse.Message = "Success"
+	dataConvert := make([]interface{}, len(data))
+	for i, v := range data {
+		dataConvert[i] = v
+		//utilities.InfoLog.Printf("Parse Result:%v\n", v)
+	}
+	//utilities.InfoLog.Printf("=========:%v\n", dataConvert)
+	GetManyResponse.Data = dataConvert
+	return GetManyResponse, len(data), 200
+}
+
 func (m mongoGoDriverRepository) Insert(motel *model.Motel) (insertResponse *model.InsertResponse, httpCode int) {
 	result, err := m.collection.InsertOne(context.TODO(), motel)
 	if err != nil {
@@ -42,7 +78,7 @@ func (m mongoGoDriverRepository) Insert(motel *model.Motel) (insertResponse *mod
 	}, 200
 }
 
-func (m mongoGoDriverRepository) Update(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
+func (m mongoGoDriverRepository) UpdateInfo(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
 	opt := options.FindOneAndUpdate().SetReturnDocument(options.After)
 	c, _ := primitive.ObjectIDFromHex(code)
 	filter := bson.M{
@@ -51,6 +87,44 @@ func (m mongoGoDriverRepository) Update(code string, motel *model.Motel) (update
 	utilities.InfoLog.Printf("Address: %v", motel)
 	update := bson.D{
 		{"$set", motel},
+	}
+	var motelUpdated model.Motel
+	m.collection.FindOneAndUpdate(context.TODO(), filter, update, opt).Decode(&motelUpdated)
+	utilities.InfoLog.Printf("motelUpdated: %v", motelUpdated)
+	return &model.UpdateResponse{
+		Message: "Success",
+		Error:   "",
+		Data:    motelUpdated,
+	}, 200
+}
+
+func (m mongoGoDriverRepository) UpdateStatus(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
+	opt := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	c, _ := primitive.ObjectIDFromHex(code)
+	filter := bson.M{
+		"MotelCode": c,
+	}
+	update := bson.D{
+		{"$set", bson.M{"Status": motel.Status}},
+	}
+	var motelUpdated model.Motel
+	m.collection.FindOneAndUpdate(context.TODO(), filter, update, opt).Decode(&motelUpdated)
+	utilities.InfoLog.Printf("motelUpdated: %v", motelUpdated)
+	return &model.UpdateResponse{
+		Message: "Success",
+		Error:   "",
+		Data:    motelUpdated,
+	}, 200
+}
+
+func (m mongoGoDriverRepository) UpdateAvailable(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
+	opt := options.FindOneAndUpdate().SetReturnDocument(options.After)
+	c, _ := primitive.ObjectIDFromHex(code)
+	filter := bson.M{
+		"MotelCode": c,
+	}
+	update := bson.D{
+		{"$set", bson.M{"Available":motel.Available}},
 	}
 	var motelUpdated model.Motel
 	m.collection.FindOneAndUpdate(context.TODO(), filter, update, opt).Decode(&motelUpdated)

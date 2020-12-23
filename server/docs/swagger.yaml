@@ -142,6 +142,12 @@ definitions:
         example: kieuchicong
         type: string
     type: object
+  model.UpdateMotelAvailablePayload:
+    properties:
+      Available:
+        example: false
+        type: boolean
+    type: object
   model.UpdateMotelPayload:
     properties:
       Address:
@@ -196,6 +202,12 @@ definitions:
       kitchen:
         type: string
     type: object
+  model.UpdateMotelStatusPayload:
+    properties:
+      Status:
+        example: false
+        type: boolean
+    type: object
   model.UpdateStatusReview:
     properties:
       Status:
@@ -203,6 +215,15 @@ definitions:
     type: object
   model.UpdateUserInfoPayload:
     properties:
+      Address:
+        example: Hà Nội
+        type: string
+      Avatar:
+        example: http://file4.batdongsan.com.vn/images/default-user-avatar-blue.jpg
+        type: string
+      CMND:
+        example: "001099014558"
+        type: string
       Email:
         example: example@gmail.com
         type: string
@@ -258,10 +279,39 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.GetOneResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Tạo bài đăng
       tags:
       - Motel
-  /motel/{code}:
+  /motel/available/{code}:
+    patch:
+      description: UpdateMotelAvailable
+      parameters:
+      - description: Motel code
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateMotelAvailablePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Cập nhật trạng thái đã/chưa có người thuê
+      tags:
+      - Motel
+  /motel/by-code/{code}:
     get:
       description: GetMotelByCode
       parameters:
@@ -280,8 +330,24 @@ paths:
       summary: Lấy bài đăng theo code
       tags:
       - Motel
+  /motel/by-owner/list-motel:
+    get:
+      description: GetMotelsByOwner
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetManyResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Lấy danh sách bài đăng theo OWNER
+      tags:
+      - Motel
+  /motel/info/{code}:
     patch:
-      description: CreateMotel
+      description: UpdateMotelInfo
       parameters:
       - description: Motel code
         in: path
@@ -301,7 +367,36 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.GetOneResponse'
-      summary: Cập nhật bài đăng
+      security:
+      - ApiKeyAuth: []
+      summary: Cập nhật thông tin bài đăng
+      tags:
+      - Motel
+  /motel/status/{code}:
+    patch:
+      description: UpdateMotelStatus
+      parameters:
+      - description: Motel code
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: request information
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateMotelStatusPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetOneResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Phê duyệt trạng thái bài đăng
       tags:
       - Motel
   /reports:

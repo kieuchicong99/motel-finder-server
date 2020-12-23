@@ -8,6 +8,10 @@ type motelService struct {
 	motelRepository model.MotelRepositoryInterface
 }
 
+func (s motelService) GetAllByOwnerCode(code string) (GetManyResponse *model.GetManyResponse, totalResult int, httpCode int) {
+	return s.motelRepository.GetAllByOwnerCode(code)
+}
+
 func (s motelService) MakeIndexes() {
 	panic("implement me")
 }
@@ -17,8 +21,19 @@ func (s motelService) Insert(motel *model.Motel) (insertResponse *model.InsertRe
 	return insertResponse, httpCode
 }
 
-func (s motelService) Update(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
-	updateResponse, httpCode = s.motelRepository.Update(code, motel)
+func (s motelService) UpdateStatus(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
+	updateResponse, httpCode = s.motelRepository.UpdateStatus(code, motel)
+	return updateResponse, httpCode
+}
+
+func (s motelService) UpdateAvailable(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
+	updateResponse, httpCode = s.motelRepository.UpdateAvailable(code, motel)
+	return updateResponse, httpCode
+}
+
+
+func (s motelService) UpdateInfo(code string, motel *model.Motel) (updateResponse *model.UpdateResponse, httpCode int) {
+	updateResponse, httpCode = s.motelRepository.UpdateInfo(code, motel)
 	return updateResponse, httpCode
 }
 

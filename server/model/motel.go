@@ -6,27 +6,27 @@ import (
 )
 
 type Motel struct {
-	MotelCode   primitive.ObjectID `json:"MotelCode" bson:"MotelCode,omitempty"`
-	Address     string             `json:"Address" bson:"Address,omitempty"`
-	Images      []string           `json:"Images" bson:"Images,omitempty"`
-	Image       string             `json:"Image" bson:"Image,omitempty"`
-	Tags        []string           `json:"Tags" bson:"Tags,omitempty"`
-	Description string             `json:"Description" bson:"Description"`
-	Title       string             `json:"Title" bson:"Title,omitempty"`
-	Cost        float32            `json:"Cost" bson:"Cost,omitempty"`
-	Latitude    string             `json:"Latitude" bson:"Latitude,omitempty"`
-	Longitude   string             `json:"Longitude" bson:"Longitude,omitempty"`
-	CreatedAt   time.Time          `json:"CreatedAt" bson:"CreatedAt,omitempty"`
-	FinishedAt  time.Time          `json:"FinishedAt" bson:"FinishedAt,omitempty"`
-	Status      bool               `json:"Status" bson:"Status"`
-
-	Bathroom        Bathroom `json:"Bathroom" bson:"Bathroom"`
-	Kitchen         string   `json:"kitchen" bson:"Kitchen"`
-	HasAirCondition bool     `json:"HasAirCondition" bson:"HasAirCondition"`
-	HasBalcony      bool     `json:"HasBalcony" bson:"HasBalcony"`
-
-	ElectricityPrice uint `json:"ElectricityPrice" bson:""`
-	WaterPrice       uint `json:"WaterPrice" bson:"WaterPrice"`
+	MotelCode        primitive.ObjectID `json:"MotelCode" bson:"MotelCode,omitempty"`
+	Address          string             `json:"Address" bson:"Address,omitempty"`
+	Images           []string           `json:"Images" bson:"Images,omitempty"`
+	Image            string             `json:"Image" bson:"Image,omitempty"`
+	Tags             []string           `json:"Tags" bson:"Tags,omitempty"`
+	Description      string             `json:"Description" bson:"Description"`
+	Title            string             `json:"Title" bson:"Title,omitempty"`
+	Cost             float32            `json:"Cost" bson:"Cost,omitempty"`
+	Latitude         string             `json:"Latitude" bson:"Latitude,omitempty"`
+	Longitude        string             `json:"Longitude" bson:"Longitude,omitempty"`
+	CreatedAt        time.Time          `json:"CreatedAt" bson:"CreatedAt,omitempty"`
+	FinishedAt       time.Time          `json:"FinishedAt" bson:"FinishedAt,omitempty"`
+	Status           bool               `json:"Status" bson:"Status"`       // trạng thái để admin duyệt bài
+	Available        bool               `json:"Available" bson:"Available"` // trạng thái phòng đã có người thuê hay chưa
+	Bathroom         Bathroom           `json:"Bathroom" bson:"Bathroom"`
+	Kitchen          string             `json:"kitchen" bson:"Kitchen"`
+	HasAirCondition  bool               `json:"HasAirCondition" bson:"HasAirCondition"`
+	HasBalcony       bool               `json:"HasBalcony" bson:"HasBalcony"`
+	ElectricityPrice uint               `json:"ElectricityPrice" bson:""`
+	WaterPrice       uint               `json:"WaterPrice" bson:"WaterPrice"`
+	UserCode         primitive.ObjectID `json:"UserCode" bson:"UserCode,omitempty"`
 }
 type Bathroom struct {
 	Type           string `json:"Type"`
@@ -35,8 +35,11 @@ type Bathroom struct {
 type MotelRepositoryInterface interface {
 	MakeIndexes()
 	Insert(motel *Motel) (insertResponse *InsertResponse, httpCode int)
-	Update(code string, motel *Motel) (updateResponse *UpdateResponse, httpCode int)
+	UpdateInfo(code string, motel *Motel) (updateResponse *UpdateResponse, httpCode int)
+	UpdateStatus(code string, motel *Motel) (updateResponse *UpdateResponse, httpCode int)
+	UpdateAvailable(code string, motel *Motel) (updateResponse *UpdateResponse, httpCode int)
 	GetAll(page, pageSize int) (GetManyResponse *GetManyResponse, totalResult int, httpCode int)
+	GetAllByOwnerCode(code string ) (GetManyResponse *GetManyResponse, totalResult int, httpCode int)
 	GetByCode(code string) (getOne *GetOneResponse, httpCode int)
 }
 
@@ -78,4 +81,12 @@ type UpdateMotelPayload struct {
 
 	ElectricityPrice uint `json:"ElectricityPrice" bson:""`
 	WaterPrice       uint `json:"WaterPrice" bson:"WaterPrice"`
+}
+
+type UpdateMotelAvailablePayload struct {
+	Available bool `json:"Available" bson:"Available" example:"false"`
+}
+
+type UpdateMotelStatusPayload struct {
+	Status bool `json:"Status" bson:"Status" example:"false"`
 }

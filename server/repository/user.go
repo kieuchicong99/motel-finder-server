@@ -50,7 +50,7 @@ func (u UserMongoGoDriverRepository) AddMotelFavourites(motelCode string, userCo
 	var user model.User
 	u.collection.FindOne(context.TODO(), filter).Decode(&user)
 	motelFavourites := user.MotelFavourites
-	if motelFavourites == nil{
+	if motelFavourites == nil {
 		motelFavourites = make(map[string]string)
 	}
 	motelFavourites[motelCode] = motelCode
@@ -138,6 +138,9 @@ func (u UserMongoGoDriverRepository) Update(code string, user *model.User) (upda
 			"FullName": user.FullName,
 			"Email":    user.Email,
 			"Phone":    user.Phone,
+			"Address":  user.Address,
+			"CMND":     user.CMND,
+			"Avatar":   user.Avatar,
 		}},
 	}
 	var userUpdated model.User

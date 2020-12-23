@@ -63,8 +63,11 @@ func main() {
 		{
 			motel.GET("", c.GetMotelsByFilter)
 			motel.POST("", c.CreateMotel)
-			motel.PATCH(":code", c.UpdateMotel)
-			motel.GET(":code", c.GetMotelByCode)
+			motel.PATCH("/info/:code", c.UpdateMotelInfo)
+			motel.PATCH("/status/:code", c.UpdateMotelStatus)
+			motel.PATCH("/available/:code", c.UpdateMotelAvailable)
+			motel.GET("/by-owner/list-motel", c.GetMotelsByOwner)
+			motel.GET("/by-code/:code", c.GetMotelByCode)
 		}
 
 		// user api router

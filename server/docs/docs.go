@@ -58,6 +58,11 @@ var doc = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "CreateMotel",
                 "produces": [
                     "application/json"
@@ -87,7 +92,50 @@ var doc = `{
                 }
             }
         },
-        "/motel/{code}": {
+        "/motel/available/{code}": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "UpdateMotelAvailable",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Motel"
+                ],
+                "summary": "Cập nhật trạng thái đã/chưa có người thuê",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Motel code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateMotelAvailablePayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/motel/by-code/{code}": {
             "get": {
                 "description": "GetMotelByCode",
                 "produces": [
@@ -114,16 +162,48 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "patch": {
-                "description": "CreateMotel",
+            }
+        },
+        "/motel/by-owner/list-motel": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "GetMotelsByOwner",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Motel"
                 ],
-                "summary": "Cập nhật bài đăng",
+                "summary": "Lấy danh sách bài đăng theo OWNER",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetManyResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/motel/info/{code}": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "UpdateMotelInfo",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Motel"
+                ],
+                "summary": "Cập nhật thông tin bài đăng",
                 "parameters": [
                     {
                         "type": "string",
@@ -139,6 +219,49 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.UpdateMotelPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetOneResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/motel/status/{code}": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "UpdateMotelStatus",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Motel"
+                ],
+                "summary": "Phê duyệt trạng thái bài đăng",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Motel code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request information",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateMotelStatusPayload"
                         }
                     }
                 ],
@@ -813,6 +936,15 @@ var doc = `{
                 }
             }
         },
+        "model.UpdateMotelAvailablePayload": {
+            "type": "object",
+            "properties": {
+                "Available": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
         "model.UpdateMotelPayload": {
             "type": "object",
             "properties": {
@@ -890,6 +1022,15 @@ var doc = `{
                 }
             }
         },
+        "model.UpdateMotelStatusPayload": {
+            "type": "object",
+            "properties": {
+                "Status": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
         "model.UpdateStatusReview": {
             "type": "object",
             "properties": {
@@ -901,6 +1042,18 @@ var doc = `{
         "model.UpdateUserInfoPayload": {
             "type": "object",
             "properties": {
+                "Address": {
+                    "type": "string",
+                    "example": "Hà Nội"
+                },
+                "Avatar": {
+                    "type": "string",
+                    "example": "http://file4.batdongsan.com.vn/images/default-user-avatar-blue.jpg"
+                },
+                "CMND": {
+                    "type": "string",
+                    "example": "001099014558"
+                },
                 "Email": {
                     "type": "string",
                     "example": "example@gmail.com"
