@@ -30,19 +30,25 @@ func (c *Controller) CreateMotel(ctx *gin.Context) {
 	}
 	//fmt.Printf("BODY: %v\n", payload)
 	motel := &model.Motel{
-		MotelCode:   primitive.NewObjectID(),
-		Address:     payload.Address,
-		Images:      payload.Images,
-		Image:       payload.Image,
-		Tags:        payload.Tags,
-		Description: payload.Description,
-		Title:       payload.Title,
-		Cost:        payload.Cost,
-		Latitude:    payload.Latitude,
-		Longitude:   payload.Longitude,
-		CreatedAt:   time.Now(),
-		FinishedAt:  time.Now().AddDate(0, 1, 0),
-		Status:      true,
+		MotelCode:        primitive.NewObjectID(),
+		Address:          payload.Address,
+		Images:           payload.Images,
+		Image:            payload.Image,
+		Tags:             payload.Tags,
+		Description:      payload.Description,
+		Title:            payload.Title,
+		Cost:             payload.Cost,
+		Latitude:         payload.Latitude,
+		Longitude:        payload.Longitude,
+		CreatedAt:        time.Now(),
+		FinishedAt:       time.Now().AddDate(0, 1, 0),
+		Status:           true,
+		Bathroom:         payload.Bathroom,
+		Kitchen:          payload.Kitchen,
+		HasAirCondition:  payload.HasAirCondition,
+		HasBalcony:       payload.HasBalcony,
+		ElectricityPrice: payload.ElectricityPrice,
+		WaterPrice:       payload.WaterPrice,
 	}
 	result, httpCode := s.Insert(motel)
 
@@ -77,6 +83,12 @@ func (c *Controller) UpdateMotel(ctx *gin.Context) {
 		Longitude:   payload.Longitude,
 		FinishedAt:  payload.FinishedAt,
 		Status:      payload.Status,
+		Bathroom:         payload.Bathroom,
+		Kitchen:          payload.Kitchen,
+		HasAirCondition:  payload.HasAirCondition,
+		HasBalcony:       payload.HasBalcony,
+		ElectricityPrice: payload.ElectricityPrice,
+		WaterPrice:       payload.WaterPrice,
 	}
 	code := ctx.Param("code")
 	result, httpCode := s.Update(code, motel)

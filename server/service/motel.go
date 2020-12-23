@@ -29,6 +29,7 @@ func (s motelService) GetAll(page, pageSize int) (GetManyResponse *model.GetMany
 
 func (s motelService) GetByCode(code string) (getOne *model.GetOneResponse, httpCode int) {
 	getOne, httpCode = s.motelRepository.GetByCode(code)
+
 	return getOne, httpCode
 }
 
