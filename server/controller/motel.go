@@ -49,6 +49,7 @@ func (c *Controller) CreateMotel(ctx *gin.Context) {
 		HasBalcony:       payload.HasBalcony,
 		ElectricityPrice: payload.ElectricityPrice,
 		WaterPrice:       payload.WaterPrice,
+		Acreage:          payload.Acreage,
 	}
 	result, httpCode := s.Insert(motel)
 
@@ -72,23 +73,24 @@ func (c *Controller) UpdateMotel(ctx *gin.Context) {
 	}
 	utilities.InfoLog.Printf("BODY: %v\n", payload)
 	motel := &model.Motel{
-		Address:     payload.Address,
-		Images:      payload.Images,
-		Image:       payload.Image,
-		Tags:        payload.Tags,
-		Description: payload.Description,
-		Title:       payload.Title,
-		Cost:        payload.Cost,
-		Latitude:    payload.Latitude,
-		Longitude:   payload.Longitude,
-		FinishedAt:  payload.FinishedAt,
-		Status:      payload.Status,
+		Address:          payload.Address,
+		Images:           payload.Images,
+		Image:            payload.Image,
+		Tags:             payload.Tags,
+		Description:      payload.Description,
+		Title:            payload.Title,
+		Cost:             payload.Cost,
+		Latitude:         payload.Latitude,
+		Longitude:        payload.Longitude,
+		FinishedAt:       payload.FinishedAt,
+		Status:           payload.Status,
 		Bathroom:         payload.Bathroom,
 		Kitchen:          payload.Kitchen,
 		HasAirCondition:  payload.HasAirCondition,
 		HasBalcony:       payload.HasBalcony,
 		ElectricityPrice: payload.ElectricityPrice,
 		WaterPrice:       payload.WaterPrice,
+		Acreage:          payload.Acreage,
 	}
 	code := ctx.Param("code")
 	result, httpCode := s.Update(code, motel)
@@ -104,19 +106,28 @@ func (c *Controller) UpdateMotel(ctx *gin.Context) {
 // @Router /motel [get]
 func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("Authorization")
-	if token == "" {
-		ctx.JSON(401, model.GetOneResponse{
-			Message: "Fail",
-			Error:   "Use invalid Token",
-			Data:    nil,
-		})
-		return
-	}
+	//if token == "" {
+	//	ctx.JSON(401, model.GetOneResponse{
+	//		Message: "Fail",
+	//		Error:   "Use invalid Token",
+	//		Data:    nil,
+	//	})
+	//	return
+	//}
 	utilities.InfoLog.Printf("Token: %s", token)
-	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
-	if userInfo== nil ||userInfo.RoleCode != "ADMIN"{
-		utilities.InfoLog.Printf("ERR: %v\n", err)
-		ctx.JSON(401, model.GetOneResponse{
+	userInfo, _ := jwt.ExtractTokenMetadata(ctx.Request)
+	//if userInfo == nil || userInfo.RoleCode != "ADMIN" {
+	//	utilities.InfoLog.Printf("ERR: %v\n", err)
+	//	ctx.JSON(401, model.GetOneResponse{
+	//		Message: "Fail",
+	//		Error:   "Unauthorized or Use invalid Token",
+	//		Data:    nil,
+	//	})
+	//	return
+	//}
+	var queryParam model.MotelQuery
+	if err := utilities.DecodeQuery(ctx.Request.URL.Query(), &queryParam); err != nil {
+		ctx.JSON(400, model.GetOneResponse{
 			Message: "Fail",
 			Error:   "Unauthorized or Use invalid Token",
 			Data:    nil,
@@ -124,7 +135,7 @@ func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
 		return
 	}
 	utilities.InfoLog.Printf("UserInfor: %v", userInfo)
-	result, _, httpCode := s.GetAll(1, 20)
+	result, _, httpCode := s.GetAll(1, 20, queryParam.Address, queryParam.FromCost, queryParam.ToCost, queryParam.FromAcreage, queryParam.ToAcreage, queryParam.HasKitchen, queryParam.HasAirCondition, queryParam.HasWaterHeater, queryParam.HasBalcony)
 	ctx.JSON(httpCode, result)
 
 }
@@ -141,3 +152,4 @@ func (c *Controller) GetMotelByCode(ctx *gin.Context) {
 	result, httpCode := s.GetByCode(code)
 	ctx.JSON(httpCode, result)
 }
+

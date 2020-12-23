@@ -11,6 +11,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/golang/snappy v0.0.2 // indirect
+	github.com/gorilla/schema v1.2.0
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/klauspost/compress v1.11.4 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
@@ -26,4 +27,5 @@ require (
 	golang.org/x/sys v0.0.0-20201221093633-bc327ba9c2f0 // indirect
 	golang.org/x/tools v0.0.0-20201221201019-196535612888 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
+	gopkg.in/validator.v2 v2.0.0-20200605151824-2b28d334fa05
 )
