@@ -153,15 +153,59 @@ var doc = `{
             }
         },
         "/reports": {
-            "post": {
-                "description": "CreateMotel",
+            "get": {
+                "description": "GetListReport",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Report"
                 ],
-                "summary": "Tạo bài đăng",
+                "summary": "Lấy danh dách Report của một bài đăng",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user_code",
+                        "name": "user_code",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "motel_code",
+                        "name": "motel_code",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page_size",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetManyResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "CreateReport",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Report bài đăng vi phạm",
                 "parameters": [
                     {
                         "description": "request information",
@@ -185,23 +229,44 @@ var doc = `{
         },
         "/reviews": {
             "post": {
-                "description": "CreateMotel",
+                "description": "GetListReview",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Review"
                 ],
-                "summary": "Tạo bài đăng",
+                "summary": "Lấy danh sách Đánh giá bài đăng",
                 "parameters": [
                     {
-                        "description": "request information",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.CreateReviewPayload"
-                        }
+                        "type": "string",
+                        "description": "status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "user_code",
+                        "name": "user_code",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "motel_code",
+                        "name": "motel_code",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page_size",
+                        "name": "page_size",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -216,18 +281,18 @@ var doc = `{
         },
         "/reviews/{reviewID}": {
             "patch": {
-                "description": "CreateMotel",
+                "description": "UpdateReviewStatus",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Review"
                 ],
-                "summary": "Tạo bài đăng",
+                "summary": "Cập nhật Đánh giá bài đăng",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Motel code",
+                        "description": " Review ID",
                         "name": "reviewID",
                         "in": "path",
                         "required": true
@@ -520,6 +585,17 @@ var doc = `{
                 }
             }
         },
+        "model.Bathroom": {
+            "type": "object",
+            "properties": {
+                "HasWaterHeater": {
+                    "type": "boolean"
+                },
+                "Type": {
+                    "type": "string"
+                }
+            }
+        },
         "model.ChangePassPayload": {
             "type": "object",
             "properties": {
@@ -540,6 +616,9 @@ var doc = `{
                     "type": "string",
                     "example": "Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội"
                 },
+                "Bathroom": {
+                    "$ref": "#/definitions/model.Bathroom"
+                },
                 "Cost": {
                     "type": "number",
                     "example": 3.3
@@ -547,6 +626,15 @@ var doc = `{
                 "Description": {
                     "type": "string",
                     "example": "Nhà rộng rãi, thoáng mát"
+                },
+                "ElectricityPrice": {
+                    "type": "integer"
+                },
+                "HasAirCondition": {
+                    "type": "boolean"
+                },
+                "HasBalcony": {
+                    "type": "boolean"
                 },
                 "Image": {
                     "type": "string",
@@ -581,6 +669,12 @@ var doc = `{
                 "Title": {
                     "type": "string",
                     "example": "CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH"
+                },
+                "WaterPrice": {
+                    "type": "integer"
+                },
+                "kitchen": {
+                    "type": "string"
                 }
             }
         },
@@ -701,6 +795,9 @@ var doc = `{
                     "type": "string",
                     "example": "Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội"
                 },
+                "Bathroom": {
+                    "$ref": "#/definitions/model.Bathroom"
+                },
                 "Cost": {
                     "type": "number",
                     "example": 3.3
@@ -709,9 +806,18 @@ var doc = `{
                     "type": "string",
                     "example": "Nhà rộng rãi, thoáng mát"
                 },
+                "ElectricityPrice": {
+                    "type": "integer"
+                },
                 "FinishedAt": {
                     "type": "string",
                     "example": "2021-01-15T22:20:28.227+00:00"
+                },
+                "HasAirCondition": {
+                    "type": "boolean"
+                },
+                "HasBalcony": {
+                    "type": "boolean"
                 },
                 "Image": {
                     "type": "string",
@@ -750,6 +856,12 @@ var doc = `{
                 "Title": {
                     "type": "string",
                     "example": "CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH"
+                },
+                "WaterPrice": {
+                    "type": "integer"
+                },
+                "kitchen": {
+                    "type": "string"
                 }
             }
         },

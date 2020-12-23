@@ -5,6 +5,13 @@ definitions:
       MotelCode:
         type: string
     type: object
+  model.Bathroom:
+    properties:
+      HasWaterHeater:
+        type: boolean
+      Type:
+        type: string
+    type: object
   model.ChangePassPayload:
     properties:
       NewPass:
@@ -19,12 +26,20 @@ definitions:
       Address:
         example: Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội
         type: string
+      Bathroom:
+        $ref: '#/definitions/model.Bathroom'
       Cost:
         example: 3.3
         type: number
       Description:
         example: Nhà rộng rãi, thoáng mát
         type: string
+      ElectricityPrice:
+        type: integer
+      HasAirCondition:
+        type: boolean
+      HasBalcony:
+        type: boolean
       Image:
         example: https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
         type: string
@@ -48,6 +63,10 @@ definitions:
         type: array
       Title:
         example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
+        type: string
+      WaterPrice:
+        type: integer
+      kitchen:
         type: string
     type: object
   model.CreateReportPayload:
@@ -128,15 +147,23 @@ definitions:
       Address:
         example: Ngõ 2, Phạm Văn Đồng, Cầu Giấy, Hà Nội
         type: string
+      Bathroom:
+        $ref: '#/definitions/model.Bathroom'
       Cost:
         example: 3.3
         type: number
       Description:
         example: Nhà rộng rãi, thoáng mát
         type: string
+      ElectricityPrice:
+        type: integer
       FinishedAt:
         example: "2021-01-15T22:20:28.227+00:00"
         type: string
+      HasAirCondition:
+        type: boolean
+      HasBalcony:
+        type: boolean
       Image:
         example: https://file4.batdongsan.com.vn/2020/08/28/20200828202318-987e_wm.jpg
         type: string
@@ -163,6 +190,10 @@ definitions:
         type: array
       Title:
         example: CCMN SỐ 1A NGÕ 49 TRIỀU KHÚC, FULL HẾT ĐỒ THANG MÁY BAN CÔNG, BẾP TÁCH RIÊNG, 26M2 GIÁ TỪ 3,3 TR/TH
+        type: string
+      WaterPrice:
+        type: integer
+      kitchen:
         type: string
     type: object
   model.UpdateStatusReview:
@@ -274,8 +305,37 @@ paths:
       tags:
       - Motel
   /reports:
+    get:
+      description: GetListReport
+      parameters:
+      - description: user_code
+        in: query
+        name: user_code
+        type: integer
+      - description: motel_code
+        in: query
+        name: motel_code
+        type: integer
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetManyResponse'
+      summary: Lấy danh dách Report của một bài đăng
+      tags:
+      - Report
     post:
-      description: CreateMotel
+      description: CreateReport
       parameters:
       - description: request information
         in: body
@@ -290,19 +350,33 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.InsertResponse'
-      summary: Tạo bài đăng
+      summary: Report bài đăng vi phạm
       tags:
       - Report
   /reviews:
     post:
-      description: CreateMotel
+      description: GetListReview
       parameters:
-      - description: request information
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.CreateReviewPayload'
+      - description: status
+        in: query
+        name: status
+        type: string
+      - description: user_code
+        in: query
+        name: user_code
+        type: integer
+      - description: motel_code
+        in: query
+        name: motel_code
+        type: integer
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
       produces:
       - application/json
       responses:
@@ -310,14 +384,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.InsertResponse'
-      summary: Tạo bài đăng
+      summary: Lấy danh sách Đánh giá bài đăng
       tags:
       - Review
   /reviews/{reviewID}:
     patch:
-      description: CreateMotel
+      description: UpdateReviewStatus
       parameters:
-      - description: Motel code
+      - description: ' Review ID'
         in: path
         name: reviewID
         required: true
@@ -335,7 +409,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.InsertResponse'
-      summary: Tạo bài đăng
+      summary: Cập nhật Đánh giá bài đăng
       tags:
       - Review
   /user:

@@ -6,6 +6,7 @@ import (
 	"server/model"
 	"server/service"
 	"server/utilities"
+	"strconv"
 )
 
 type IReviewController interface {
@@ -33,10 +34,10 @@ func (r *reviewControllerIml) GetListReport(ctx *gin.Context) {
 }
 
 //@Tags Review
-// @Summary Tạo bài đăng
-// @Description CreateMotel
+// @Summary Cập nhật Đánh giá bài đăng
+// @Description UpdateReviewStatus
 // @Produce  json
-// @Param  reviewID path string true "Motel code"
+// @Param  reviewID path string true " Review ID"
 // @Param request body model.UpdateStatusReview true "request information"
 // @Success 200 {object} model.InsertResponse
 // @Router /reviews/{reviewID} [patch]
@@ -53,8 +54,8 @@ func (r *reviewControllerIml) UpdateReviewStatus(ctx *gin.Context) {
 }
 
 //@Tags Review
-// @Summary Tạo bài đăng
-// @Description CreateMotel
+// @Summary Đánh giá bài đăng
+// @Description CreateReview
 // @Produce  json
 // @Param request body model.CreateReviewPayload true "request information"
 // @Success 200 {object} model.InsertResponse
@@ -71,7 +72,17 @@ func (r *reviewControllerIml) CreateReview(ctx *gin.Context) {
 
 	ctx.JSON(httpCode, result)
 }
-
+//@Tags Review
+// @Summary Lấy danh sách Đánh giá bài đăng
+// @Description GetListReview
+// @Produce  json
+// @Param status query string false "status"
+// @Param user_code query integer false "user_code"
+// @Param motel_code query integer false "motel_code"
+// @Param page query integer false "page"
+// @Param page_size query integer false "page_size"
+// @Success 200 {object} model.InsertResponse
+// @Router /reviews [post]
 func (r *reviewControllerIml) GetListReview(ctx *gin.Context) {
 	sta := ctx.Query("status")
 	status:= false
@@ -80,7 +91,9 @@ func (r *reviewControllerIml) GetListReview(ctx *gin.Context) {
 	}
 	userID := ctx.Query("user_code")
 	motelCode := ctx.Query("motel_code")
-	result,_,httpCode := r.reviewService.GetAllReview(1,10000,userID,status,motelCode)
+	page, _ := strconv.Atoi(ctx.Query("page"))
+	pageSize, _ :=  strconv.Atoi(ctx.Query("page_size"))
+	result,_,httpCode := r.reviewService.GetAllReview(page ,pageSize, userID, status, motelCode)
 
 	ctx.JSON(httpCode, result)
 }
