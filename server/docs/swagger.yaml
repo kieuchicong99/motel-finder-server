@@ -255,6 +255,43 @@ paths:
   /motel:
     get:
       description: GetMotelsByFilter
+      parameters:
+      - description: address
+        in: query
+        name: address
+        type: string
+      - description: from_cost
+        in: query
+        name: from_cost
+        type: integer
+      - description: to_cost
+        in: query
+        name: to_cost
+        type: integer
+      - description: from_acreage
+        in: query
+        name: from_acreage
+        type: number
+      - description: to_acreage
+        in: query
+        name: to_acreage
+        type: number
+      - description: has_kitchen
+        in: query
+        name: has_kitchen
+        type: string
+      - description: has_air_condition
+        in: query
+        name: has_air_condition
+        type: boolean
+      - description: has_water_heater
+        in: query
+        name: has_water_heater
+        type: boolean
+      - description: has_balcony
+        in: query
+        name: has_balcony
+        type: boolean
       produces:
       - application/json
       responses:
@@ -262,8 +299,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.GetManyResponse'
-      security:
-      - ApiKeyAuth: []
       summary: Lấy danh sách bài đăng
       tags:
       - Motel

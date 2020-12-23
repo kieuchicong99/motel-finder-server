@@ -248,30 +248,38 @@ func (c *Controller) UpdateMotelAvailable(ctx *gin.Context) {
 // @Summary Lấy danh sách bài đăng
 // @Description GetMotelsByFilter
 // @Produce  json
-// @Security ApiKeyAuth
+// @Param address query string false "address"
+// @Param from_cost query uint false "from_cost"
+// @Param to_cost query uint false "to_cost"
+// @Param from_acreage query float64 false "from_acreage"
+// @Param to_acreage query float64 false "to_acreage"
+// @Param has_kitchen query string false "has_kitchen"
+// @Param has_air_condition query bool false "has_air_condition"
+// @Param has_water_heater query bool false "has_water_heater"
+// @Param has_balcony query bool false "has_balcony"
 // @Success 200  {object} model.GetManyResponse
 // @Router /motel [get]
 func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
-	token := ctx.Request.Header.Get("Authorization")
-	if token == "" {
-		ctx.JSON(401, model.GetOneResponse{
-			Message: "Fail",
-			Error:   "Use invalid Token",
-			Data:    nil,
-		})
-		return
-	}
-	utilities.InfoLog.Printf("Token: %s", token)
-	userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
-	if userInfo == nil || userInfo.RoleCode != "ADMIN" {
-		utilities.InfoLog.Printf("ERR: %v\n", err)
-		ctx.JSON(401, model.GetOneResponse{
-			Message: "Fail",
-			Error:   "Unauthorized or Use invalid Token",
-			Data:    nil,
-		})
-		return
-	}
+	//token := ctx.Request.Header.Get("Authorization")
+	//if token == "" {
+	//	ctx.JSON(401, model.GetOneResponse{
+	//		Message: "Fail",
+	//		Error:   "Use invalid Token",
+	//		Data:    nil,
+	//	})
+	//	return
+	//}
+	//utilities.InfoLog.Printf("Token: %s", token)
+	//userInfo, err := jwt.ExtractTokenMetadata(ctx.Request)
+	//if userInfo == nil{
+	//	utilities.InfoLog.Printf("ERR: %v\n", err)
+	//	ctx.JSON(401, model.GetOneResponse{
+	//		Message: "Fail",
+	//		Error:   "Unauthorized or Use invalid Token",
+	//		Data:    nil,
+	//	})
+	//	return
+	//}
 	var queryParam model.MotelQuery
 	if err := utilities.DecodeQuery(ctx.Request.URL.Query(), &queryParam); err != nil {
 		ctx.JSON(400, model.GetOneResponse{
@@ -281,7 +289,6 @@ func (c *Controller) GetMotelsByFilter(ctx *gin.Context) {
 		})
 		return
 	}
-	utilities.InfoLog.Printf("UserInfor: %v", userInfo)
 	result, _, httpCode := motelService.GetAll(1, 20, queryParam.Address, queryParam.FromCost, queryParam.ToCost, queryParam.FromAcreage, queryParam.ToAcreage, queryParam.HasKitchen, queryParam.HasAirCondition, queryParam.HasWaterHeater, queryParam.HasBalcony)
 	ctx.JSON(httpCode, result)
 

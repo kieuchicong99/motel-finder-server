@@ -35,11 +35,6 @@ var doc = `{
     "paths": {
         "/motel": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "GetMotelsByFilter",
                 "produces": [
                     "application/json"
@@ -48,6 +43,62 @@ var doc = `{
                     "Motel"
                 ],
                 "summary": "Lấy danh sách bài đăng",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "address",
+                        "name": "address",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "from_cost",
+                        "name": "from_cost",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "to_cost",
+                        "name": "to_cost",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "from_acreage",
+                        "name": "from_acreage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "to_acreage",
+                        "name": "to_acreage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "has_kitchen",
+                        "name": "has_kitchen",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "has_air_condition",
+                        "name": "has_air_condition",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "has_water_heater",
+                        "name": "has_water_heater",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "has_balcony",
+                        "name": "has_balcony",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
